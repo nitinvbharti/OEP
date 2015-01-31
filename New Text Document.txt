@@ -1,0 +1,19 @@
+If that facutly teaches that course:
+$query=mysql_query("SELECT * FROM courses WHERE faculty_id='$_SESSION[faculty_id]' AND course_id='$_POST[course']") or die("Died".mysql_error());
+$count = mysql_num_rows($query);
+
+
+if($count==1)
+{
+	$query_2=mysql_query("SELECT ques_bank_id FROM ques_bank_no WHERE course_id='$_POST[course]') AND test_id='$_POST[test]'") or die("Died".mysql_error());
+	$count_2 = mysql_num_rows($query);
+	if(count_2==0)
+	{
+		//
+		
+	}
+}
+else
+{
+	dont be clever
+}
