@@ -102,10 +102,10 @@ else
 <form action="index.php" method="post" name="UserLogin">
 <table align=center >
 <tr>
-<td><input type="text" class="input-medium" name="username"  autocomplete="off" maxlength="9" placeholder="Your Username..."  required/></td>
+<td><input type="text" class="input-medium" name="username"  autocomplete="on" maxlength="9" placeholder="Your Username..."  required/></td>
 </tr>
 <tr>
-<td><input type="password"  class="input-medium" autocomplete="off"  name="password" maxlength="15" placeholder="Your Password..."  required required/></td>
+<td><input type="password"  class="input-medium" autocomplete="on"  name="password" maxlength="15" placeholder="Your Password..."  required required/></td>
 </tr>
 
 <tr><td><label class="control-label" ><input type="checkbox"  class="checkbox" name="remember" value=1/> Remember me</label></td></tr>

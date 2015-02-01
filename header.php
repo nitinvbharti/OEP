@@ -97,7 +97,7 @@ session_start();
                   <ul class="dropdown-menu">
                     <li><a href="faculty.php">Previous papers</a></li>
                     <li><a href="faculty.php">Current Exams</a></li>
-                    <li><a href="faculty.php">My History</a></li>
+                    <li><a href="history.php">My History</a></li>
                     <li><a href="faculty.php">About OEP</a></li>
                     <li><a href="feedback.php">Submit Feedback</a></li>
                   </ul>

@@ -24,7 +24,7 @@ if($_GET['update_exam'] || isset($_SESSION['tid']))
   
   if($_POST['schedule'])
    {
-    mysql_query("update tests set active='$_POST[schedule]' where test_id='$_SESSION[tid]' ");
+    mysql_query("update tests set active='$_POST[schedule]' where test_id='$_SESSION[tid]'");
 	if($_POST['schedule']==1)
 	 {
 	  echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Test Activated!</div>';
@@ -149,7 +149,7 @@ echo '<div class="text-left" ><form action="update_exam.php" method="post"><butt
 <!-- Modal -->
 <div id="myModalsch" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<button type="button" action='<?php $select=mysql_query("update tests set active='$_POST[schedule]' where test_id='$_SESSION[tid]'");?> ' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 <h3 id="myModalLabel">Test Scheduling</h3>
 </div>
 <div class="modal-body text-left">
@@ -160,12 +160,18 @@ echo '<div class="text-left" ><form action="update_exam.php" method="post"><butt
 <div class="modal-footer">
 <form action="update_exam.php" method="post">
 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-<?php 
-if(!$test['active']) 
-echo '<button type="submit" class="btn btn-primary" name="schedule" value="1" ><i class="icon-white icon-ok" ></i> Activate</button>';  
-else 
-echo '<button type="submit" class="btn btn-danger" name="schedule" value="-1" ><i class="icon-white icon-remove" ></i> Deactivate</button>'; ?>
 
+<?php 
+if(!$test['active'] || $test['active']=='-1') 
+   {
+   	echo '<button type="submit" class="btn btn-primary" name="schedule" value="1" ><i class="icon-white icon-ok" ></i> Activate</button>';  
+	}
+else 
+{
+	echo '<button type="submit" class="btn btn-danger" name="schedule" value="-1" ><i class="icon-white icon-remove" ></i> Deactivate</button>'; 
+	
+}
+?>
 </form>
 </div>
 </div>
