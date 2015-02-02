@@ -19,8 +19,6 @@ session_start();
 	
 	
     <link rel="stylesheet" href="css/style.css" type="text/css"  media="screen" >
-
-	
 <style>
       html,
       body {
