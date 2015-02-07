@@ -15,7 +15,7 @@ require("header.php");
 if($_SESSION['faculty_id'])
  {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-if($_POST['incomp'])
+if(isset($_POST['incomp']))
  {
   $_SESSION['tid']=$_POST['test_id'];
   $test=mysql_fetch_array(mysql_query("select step,course_id,type from tests where test_id='$_SESSION[tid]' "));
@@ -58,8 +58,8 @@ if($_SESSION['tid']=="" && $_SESSION['course']=="" && $count==0)
 }
 else if(isset($_SESSION['course']))
 {
-if($_SESSION[step]=="")
- $_SESSION[step]=1;
+if($_SESSION['step']=="")
+ $_SESSION['step']=1;
 
 if($_GET['step']==1)
  {
@@ -206,7 +206,18 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  <?php if($test['date']) echo "value=".$test['date']; ?> placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date"  
+  <?php 
+  if(validateDate($test['date'])) 
+    {
+      echo "value=".$test['date']; 
+    }
+  else 
+    { 
+       echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
+       echo '</div>';
+    }
+ ?> placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
