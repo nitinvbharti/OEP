@@ -206,33 +206,25 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  
-  <?php 
-  if(validateDate($test['date'])) 
-    {
-      echo "value=".$test['date']; 
-    }
-  else 
-    { 
-       echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
-       echo '</div>';
-    }
- ?> placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date"  placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
   <div class="control-group" >
   <div class="controls">
-  <button type="submit" class="btn btn-primary" name="step" value="2" >Next <i class="icon-chevron-right icon-white"></i></button>
+  <button type="submit" class="btn btn-primary" name="step" value="<?php echo validateDate($test['date']); ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
   </div>
-  </div>
-  
-  </form>
   </div>
   <?php
- }
- 
- 
+    
+if(validateDate($test['date'],"YYYY-MM-DD")){ echo validateDate($test['date']),$test['date'],"hi";}  else { echo 2;}
+  ?>
+  </form>
+  </div>
+  
+<?php 
+}
+
 if($_SESSION['step']==2)
  {
    if(isset($_SESSION['tid']))
@@ -335,6 +327,8 @@ if($_SESSION['step']==3)
   {
     echo '<script>window.location="index.php";</script>';
   }
+
+  
 
 require("footer.php");
 ?>

@@ -66,10 +66,18 @@ session_start();
 </style>
 <?php
 
-  function validateDate($date, $format = 'Y-m-d')
+  function validateDate($date, $format = 'YYYY-MM-DD')
   {
     $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) == $date;
+    //echo $date,$d->format($format);
+    if($d && $d->format($format) == $date)
+    {
+      return 2;
+    }
+    else
+    {
+      return 1111;
+    }
   }
 
 ?>	
