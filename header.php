@@ -64,7 +64,6 @@ session_start();
       }
 
 </style>
-	
 </head>
 <body>
 <div id="wrap" >
