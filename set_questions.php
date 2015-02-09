@@ -198,7 +198,7 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="duration"  ><strong>Duration: </strong></label>
   <div class="controls">
-  <input type="text" class="input" name="duration" id="duration"  <?php if($test['duration']) echo "value=".$test['duration']; ?> placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
+  <input type="text" class="input" name="duration" id="duration"  <?php if(isset($test['duration'])) echo "value=".$test['duration']; ?> maxlength="5" placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
   </div>
   </div>
   
@@ -206,23 +206,25 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date" <?php if(isset($test['date'])) if($test['date']) echo "value=".$test['date']; ?> maxlength="10" placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
   <div class="control-group" >
   <div class="controls">
-  <button type="submit" class="btn btn-primary" name="step" value="<?php echo validateDate($test['date']); ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
+  <button type="submit" class="btn btn-primary" name="step" value="<?php if(isset($test['date'])) if(validateDate($test['date'])==1) echo "2"; else echo "2"; ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
   </div>
   </div>
-  <?php
-    
-if(validateDate($test['date'],"YYYY-MM-DD")){ echo validateDate($test['date']),$test['date'],"hi";}  else { echo 2;}
-  ?>
+ 
   </form>
   </div>
   
 <?php 
+if(isset($test['date']))
+{
+ if(validateDate($test['date'])==1) echo "here i m",$test['date']; else echo "It was false"; 
+}
+
 }
 
 if($_SESSION['step']==2)
