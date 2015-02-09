@@ -2,7 +2,7 @@
 
 
 session_start();
-$test = array("duration"=>"","date"=>"","type"=>"");
+$test=array("type"=>"","duration"=>"","date"=>"");
 //////////////////////////////////////////////////////////////////////////////////////////////////
 if($_SESSION['tab']!=3)
 {
@@ -16,7 +16,7 @@ require("header.php");
 if($_SESSION['faculty_id'])
  {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-if(isset($_POST['incomp']))
+if($_POST['incomp'])
  {
   $_SESSION['tid']=$_POST['test_id'];
   $test=mysql_fetch_array(mysql_query("select step,course_id,type from tests where test_id='$_SESSION[tid]' "));
@@ -59,8 +59,8 @@ if($_SESSION['tid']=="" && $_SESSION['course']=="" && $count==0)
 }
 else if(isset($_SESSION['course']))
 {
-if($_SESSION['step']=="")
- $_SESSION['step']=1;
+if($_SESSION[step]=="")
+ $_SESSION[step]=1;
 
 if($_GET['step']==1)
  {
@@ -72,22 +72,41 @@ if($_GET['step']==2)
  {
   if($_GET['exam'])
    {
-  if(!(isset($_SESSION['tid'])))
-   {
-   $_SESSION['type']=$_GET['exam'];
-   $_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
-   mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
-   }
-  else
-   {
-    mysql_query("update tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]' where test_id='$_SESSION[tid]' ");
-   }
-  $_SESSION['step']=2;
-   }
-  else
-   {
-    $_SESSION['step']=2;
-   }
+		//echo $_GET[duration];
+		//echo $_GET[exp_date];
+		
+		if(!validateDate($_GET[exp_date]))
+		{
+		unset($_GET[exp_date]);
+		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
+		$_SESSION['step']=1;
+		}
+		else if(!validateTime($_GET[duration]))
+		{
+		unset($_GET[duration]);
+		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid duration!</div>';
+		$_SESSION['step']=1;
+		}
+		else
+		{
+		if(!(isset($_SESSION['tid'])))
+		{
+		$_SESSION['type']=$_GET['exam'];
+		$_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
+		mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
+		}
+		else
+		{
+		mysql_query("update tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]' where test_id='$_SESSION[tid]' ");
+		}
+		$_SESSION['step']=2;
+		}
+		}
+		else
+		{
+		$_SESSION['step']=2;
+		}
+		
  }
  
  
@@ -132,15 +151,18 @@ if($_SESSION['step']==4)
 <?php
 if($_SESSION['step']>0)
  {
+  //echo "ss1";
   echo '<div class="bar"  style="width:33.333%;" ></div>';
  }
  
 if($_SESSION['step']>1)
  {
+  echo "ss2";
   echo '<div class="bar bar-warning"  style="width:33.333%;" ></div>';
  }
 if($_SESSION['step']>2)
  {
+  echo "ss3";
   echo '<div class="bar bar-success"  style="width:33.333%;" ></div>';
  }
 echo '</div>';
@@ -171,10 +193,12 @@ echo '</div>';
 <?php
 if($_SESSION['step']==1)
  {
+  //echo "ss4";
   ?>
   <?php
    if(isset($_SESSION['tid']))
     {
+	
 	 $test=mysql_fetch_array(mysql_query("select type, duration, date from tests where test_id='$_SESSION[tid]' "));
 	}
   ?>
@@ -199,35 +223,42 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="duration"  ><strong>Duration: </strong></label>
   <div class="controls">
-  <input type="text" class="input" name="duration" id="duration"  <?php  echo "value=".$test['duration']; ?> maxlength="5" placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
+  <input type="text" class="input" name="duration" id="duration"
+  <?php 
+	if($test['duration'])
+	    echo "value=".$test['duration']; 
+  ?> maxlength="5" placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
   </div>
   </div>
-  
   
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  maxlength="10" placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date" 
+  <?php 
+	if($test['date']) 
+		echo " value=".$test['date']; 
+  ?> maxlength="10" placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
   <div class="control-group" >
   <div class="controls">
-  <button type="submit" class="btn btn-primary" name="step" value="<?php  if(validateDate($test['date'])==2) echo 2; else echo 1; ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
+  <button type="submit" class="btn btn-primary" name="step" value="2" >Next <i class="icon-chevron-right icon-white"></i></button>
   </div>
-  </div>
- 
-  </form>
   </div>
   
-<?php 
+  </form>
+  </div>
 
-
-
-}
-
+  <?php
+ }
+ 
+ 
 if($_SESSION['step']==2)
  {
+  if(validateDate($test['date'],'-'))
+		
    if(isset($_SESSION['tid']))
     {
 	 $test=mysql_fetch_array(mysql_query("select max_marks, equal_weight, max_qns, neg_marking, sets, display from tests where test_id='$_SESSION[tid]' "));
@@ -239,7 +270,7 @@ if($_SESSION['step']==2)
   <div class="control-group" >
   <label class="control-label" for="max_marks"  ><strong>Max Marks: </strong></label>
   <div class="controls">
-  <input type="number" class="input" name="max_marks"  <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks" placeholder="maximum marks..." />
+  <input type="number" class="input" name="max_marks"  <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks"  maxlength="3" placeholder="maximum marks..." />
   </div>
   </div>
   
@@ -252,7 +283,7 @@ if($_SESSION['step']==2)
   <div class="control-group" >
   <label class="control-label" for="max_qns"  ><strong>Max Questions: </strong></label>
   <div class="controls">
-  <input type="number" class="input" name="max_qns"  <?php if($test['max_qns']) echo "value=".$test['max_qns']; ?> id="max_qns" placeholder="maximum questions..." />
+  <input type="number" class="input" name="max_qns"  <?php if($test['max_qns']) echo "value=".$test['max_qns']; ?> id="max_qns"  maxlength="3" placeholder="maximum questions..." />
   </div>
   </div>
   <div class="control-group" >
@@ -328,8 +359,6 @@ if($_SESSION['step']==3)
   {
     echo '<script>window.location="index.php";</script>';
   }
-
-  
 
 require("footer.php");
 ?>
