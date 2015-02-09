@@ -72,12 +72,10 @@ session_start();
     //echo $date,$d->format($format);
     if($d && $d->format($format) == $date)
     {
-      echo "hi";
       return 2;
     }
     else
     {
-      echo "dude",$date;
       return 1;
     }
   }

@@ -212,7 +212,7 @@ if($_SESSION['step']==1)
   
   <div class="control-group" >
   <div class="controls">
-  <button type="submit" class="btn btn-primary" name="step" value="<?php if(isset($test['date'])) if(validateDate($test['date'])==1) echo "2"; else echo "2"; ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
+  <button type="submit" class="btn btn-primary" name="step" value="<?php $x=1; $y=2;  if(!isset($test['date'])){ if(validateDate($test['date'])==2){ echo $x;} else {echo $y;} } else echo 2; ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
   </div>
   </div>
  
@@ -222,7 +222,7 @@ if($_SESSION['step']==1)
 <?php 
 if(isset($test['date']))
 {
- if(validateDate($test['date'])==1) echo "here i m",$test['date']; else echo "It was false"; 
+ if(validateDate($test['date'])==2) print $test['date']; else print "It was false"; 
 }
 
 }
