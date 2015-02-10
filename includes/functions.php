@@ -33,8 +33,8 @@ function validateDate($rawDate,$seperator='-')
         }
         if($ndate[0]%4==0)
         {
-            $daysArray=[31,29,31,30,31, 30,31,31,30,31, 30,31];
-            if($ndate[1]>=1&&$ndate[1]<=12)
+            $daysArray=[31,29,31,30,31,30,31,31,30,31,30,31];
+            if($ndate[1]>=1 && $ndate[1]<=12)
             {
                 if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
                 {

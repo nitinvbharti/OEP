@@ -33,6 +33,10 @@ if(isset($_POST['set_exam']) || isset($_POST['evaluate']) || isset($_POST['quest
 	 {
        echo '<script>window.location="update_exam.php";</script>';
 	 }
+	 else if (isset($_POST['evaluate']) || isset($_POST['evaluate'])) 
+	 {
+	 	echo '<script>window.location="evaluate.php";</script>';
+	 }
 	 
 	 
 }
