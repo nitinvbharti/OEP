@@ -28,7 +28,38 @@
     <script src="js/holder.js"></script>
     <script src="js/prettify.js"></script>
     <script src="js/application.js"></script>
-	
+	<script type="text/javascript">
+         $(document).ready(function () {
+             $(".input").forceNumeric();
+         });
+         jQuery.fn.forceNumeric = function () {
+
+             return this.each(function () {
+                 $(this).keydown(function (e) {
+                     var key = e.which || e.keyCode;
+
+                     if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+                     // numbers   
+                         key >= 48 && key <= 57 ||
+                     // Numeric keypad
+                         key >= 96 && key <= 105 ||
+                     //  minus, and colon
+                         key == 59 || key == 173 ||
+                     // Backspace and Tab and Enter
+                        key == 8 || key == 9 || key == 13 ||
+                     // Home and End
+                        key == 35 || key == 36 ||
+                     // left and right arrows
+                        key == 37 || key == 39 ||
+                     // Del and Ins
+                        key == 46 || key == 45)
+                         return true;
+
+                     return false;
+                 });
+             });
+         }
+    </script>
 	
 	<script src="js/script.js"></script>
 <!--to close the compositon -->

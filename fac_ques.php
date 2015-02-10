@@ -15,10 +15,17 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
  {
   if(isset($_POST['delete']) || isset($_POST['edit']) || isset($_POST['add']) || isset($_POST['change']))
    {
-    $max=mysql_fetch_array(mysql_query("select max(ques_id) as max from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' "));
+   	$max=mysql_fetch_array(mysql_query("select max(ques_id) as max from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' "));
     $qno=$max['max']+1;
 	if(isset($_POST['add']))
 	{
+		$m=mysql_fetch_array(mysql_query("select max_qns as m from tests where test_id='$_SESSION[tid]' "));
+        if($qno>$m['m'])
+        {
+        	echo "max questions limit reached";
+        }
+        else
+        {
 	    //echo "hello";
 		//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
 		$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
@@ -70,6 +77,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
         echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$qno.' added!</div>';
 		$_SESSION['ques_id']=$qno;
 		 }
+		}
 		//echo '<script>window.location="fac_ques.php";</script>';
 	}
 	else if(isset($_POST['delete']))

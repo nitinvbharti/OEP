@@ -7,14 +7,20 @@ if($_SESSION['faculty_id'])
 if(isset($_SESSION['course']))
  {
   $type=$_POST['name'];
-  $test_nos=mysql_fetch_array(mysql_query("select test_id from tests where course_id='$_SESSION[course]'  and type='$_POST['name']' "));
-  echo $test_nos;
-  //$_SESSION['type']=$test['type'];
-  $qid=mysql_fetch_array(mysql_query("select ques_bank_id from ques_bank_no where test_id='$test_nos' "));
-  echo $test;
-
-
-
+  $test_id_list=array();
+  $i=0;
+  $sql=mysql_query("select test_id from tests where course_id=".$_SESSION['course']." and type=".$_POST['name'].")";
+ /*
+  //while($test_id_list[$i]=mysql_fetch_array($sql))
+  		{
+  			$i++;
+  		}
+  var_dump($test_id_list);
+ // $test_count=count($test_id_list);
+//size of array 
+  $i=$i-1;
+*/
+  
  }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ?>

@@ -74,17 +74,8 @@ if($_GET['step']==2)
   if(!(isset($_SESSION['tid'])))
    {
    $_SESSION['type']=$_GET['exam'];
-   //change here for checking
-   //******************************************//
-   $isthere=0;
-   $isthere=mysql_num_rows(mysql_query("select * from tests where course_id='$_SESSION[course]' and type='$_SESSION[type]'"));
-   if($isthere>"0")
-      $_SESSION['step']=1;
-   else 
-    { //******************************************//
-      $_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
-      mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
-    }
+   $_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
+   mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
    }
   else
    {

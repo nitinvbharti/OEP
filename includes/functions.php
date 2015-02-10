@@ -1,6 +1,76 @@
 <?php
 include("connect.php");
 
+error_reporting(E_ERROR | E_PARSE);
+
+function validateTime($rawtime,$seperator2=':')
+{
+	$ntime=explode($seperator2,$rawtime);
+	//echo $ntime[0].$ntime[1];
+	if($ntime[0]>=0 && $ntime[0]<=23)
+	{
+		return true;
+	}
+	if($ntime[1]>=0 && $ntime[1]<=59)
+	{
+		return true;
+	}
+	return false;
+}
+
+function validateDate($rawDate,$seperator='-')
+    {
+		//echo $rawdate;
+		
+        $ndate=explode($seperator,$rawDate);
+        //var_dump($ndate);
+		$cdate=date("Y-m-d");
+		//echo $cdate;
+		$expldate=explode($seperator,$cdate);
+        if($ndate[0]!=$expldate[0] || $ndate[1]<$expldate[1] || ($ndate[1]==$expldate[1] && $ndate[2]<$expldate[2]))
+        {
+            return false;
+        }
+        if($ndate[0]%4==0)
+        {
+            $daysArray=[31,29,31,30,31,30,31,31,30,31,30,31];
+            if($ndate[1]>=1 && $ndate[1]<=12)
+            {
+                if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            $daysArray=[31,28,31,30,31, 30,31,31,30,31, 30,31];
+            if($ndate[1]>=1&&$ndate[1]<=12)
+            {
+                if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+	
 function search_who()
 {
 	if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']) )
