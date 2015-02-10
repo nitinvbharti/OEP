@@ -15,7 +15,7 @@ require("header.php");
 if($_SESSION['faculty_id'])
  {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-if(isset($_POST['incomp']))
+if($_POST['incomp'])
  {
   $_SESSION['tid']=$_POST['test_id'];
   $test=mysql_fetch_array(mysql_query("select step,course_id,type from tests where test_id='$_SESSION[tid]' "));
@@ -58,8 +58,8 @@ if($_SESSION['tid']=="" && $_SESSION['course']=="" && $count==0)
 }
 else if(isset($_SESSION['course']))
 {
-if($_SESSION['step']=="")
- $_SESSION['step']=1;
+if($_SESSION[step]=="")
+ $_SESSION[step]=1;
 
 if($_GET['step']==1)
  {
@@ -74,8 +74,17 @@ if($_GET['step']==2)
   if(!(isset($_SESSION['tid'])))
    {
    $_SESSION['type']=$_GET['exam'];
-   $_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
-   mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
+   //change here for checking
+   //******************************************//
+   $isthere=0;
+   $isthere=mysql_num_rows(mysql_query("select * from tests where course_id='$_SESSION[course]' and type='$_SESSION[type]'"));
+   if($isthere>"0")
+      $_SESSION['step']=1;
+   else 
+    { //******************************************//
+      $_SESSION['tid']=mysql_num_rows(mysql_query("select test_id from tests"))+1;
+      mysql_query("insert into tests set course_id='$_SESSION[course]', type='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', test_id='$_SESSION[tid]' ");
+    }
    }
   else
    {
@@ -206,18 +215,7 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  
-  <?php 
-  if(validateDate($test['date'])) 
-    {
-      echo "value=".$test['date']; 
-    }
-  else 
-    { 
-       echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
-       echo '</div>';
-    }
- ?> placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date"  <?php if($test['date']) echo "value=".$test['date']; ?> placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
