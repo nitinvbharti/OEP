@@ -157,12 +157,12 @@ if($_SESSION['step']>0)
  
 if($_SESSION['step']>1)
  {
-  echo "ss2";
+  //echo "ss2";
   echo '<div class="bar bar-warning"  style="width:33.333%;" ></div>';
  }
 if($_SESSION['step']>2)
  {
-  echo "ss3";
+  //echo "ss3";
   echo '<div class="bar bar-success"  style="width:33.333%;" ></div>';
  }
 echo '</div>';
