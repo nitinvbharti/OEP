@@ -62,7 +62,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		 $type=1;
 		 
 		 
-		$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' and ans='$_POST[ans]' and marks='$_POST[marks]' and options='$op' and qtype='$type' and if_image='$extension' and neg_marks='$_POST[neg_marks]' "));
+		$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' "));
 		
 	    if(!$no_repeat)
 		 {

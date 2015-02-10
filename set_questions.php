@@ -207,29 +207,20 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date"  maxlength="10" placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" name="exp_date" id="exp_date" maxlength="10" <?php  echo "value=".$test['duration']; ?> placeholder="YYYY-MM-DD" />
   </div>
   </div>
   
   <div class="control-group" >
   <div class="controls">
-  <button type="submit" class="btn btn-primary" name="step" value="<?php  if(validateDate($test['date'])==2) echo 2; else echo 1; ?>" >Next <i class="icon-chevron-right icon-white"></i></button>
+  <button type="submit" class="btn btn-primary" name="step" value="<?php  if(validateDate($test['date'])==2) echo 2; else echo 1; ?>" >Next <?php print $test['date']; ?><i class="icon-chevron-right icon-white"></i></button>
   </div>
   </div>
  
   </form>
   </div>
   
-<?php 
-<<<<<<< HEAD
-if(isset($test['date']))
-{
- if(validateDate($test['date'])==2) print $test['date']; else print "It was false"; 
-}
-=======
-
-
->>>>>>> origin/master
+<?php
 
 }
 
