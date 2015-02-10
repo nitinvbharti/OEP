@@ -206,7 +206,10 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
+
   <input type="date" class="input" name="exp_date" id="exp_date"  <?php if($test['date']) echo "value=".$test['date']; ?> placeholder="YYYY-MM-DD" />
+
+ 
   </div>
   </div>
   
@@ -218,12 +221,12 @@ if($_SESSION['step']==1)
   
   </form>
   </div>
+
   <?php
  }
  
- 
 if($_SESSION['step']==2)
- {
+ {	
    if(isset($_SESSION['tid']))
     {
 	 $test=mysql_fetch_array(mysql_query("select max_marks, equal_weight, max_qns, neg_marking, sets, display from tests where test_id='$_SESSION[tid]' "));
@@ -235,7 +238,9 @@ if($_SESSION['step']==2)
   <div class="control-group" >
   <label class="control-label" for="max_marks"  ><strong>Max Marks: </strong></label>
   <div class="controls">
-  <input type="number" class="input" name="max_marks"  <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks" placeholder="maximum marks..." />
+
+  <input type="number" class="input" name="max_marks" maxlength="3" <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks" placeholder="maximum marks..." />
+
   </div>
   </div>
   
@@ -248,7 +253,9 @@ if($_SESSION['step']==2)
   <div class="control-group" >
   <label class="control-label" for="max_qns"  ><strong>Max Questions: </strong></label>
   <div class="controls">
-  <input type="number" class="input" name="max_qns"  <?php if($test['max_qns']) echo "value=".$test['max_qns']; ?> id="max_qns" placeholder="maximum questions..." />
+
+  <input type="number" class="input" name="max_qns"  maxlength="3" <?php if($test['max_qns']) echo "value=".$test['max_qns']; ?> id="max_qns" placeholder="maximum questions..." />
+
   </div>
   </div>
   <div class="control-group" >
