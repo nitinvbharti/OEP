@@ -64,23 +64,6 @@ session_start();
       }
 
 </style>
-<?php
-	
-  function validateDate($date, $format = 'Y-m-d')
-  {
-    $d = DateTime::createFromFormat($format, $date);
-    //echo $date,$d->format($format);
-    if($d && $d->format($format) == $date)
-    {
-      return 2;
-    }
-    else
-    {
-      return 1;
-    }
-  }
-
-?>	
 </head>
 <body>
 <div id="wrap" >
