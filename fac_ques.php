@@ -22,7 +22,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		$m=mysql_fetch_array(mysql_query("select max_qns as m from tests where test_id='$_SESSION[tid]' "));
         if($qno>$m['m'])
         {
-        	echo "max questions limit reached";
+        	echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Max Question limit reached</div>';
         }
         else
         {
@@ -177,6 +177,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		}
 	else
 	{
+		echo "here";
 	    $qno=$_POST['serial'];
 //$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
 		$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];

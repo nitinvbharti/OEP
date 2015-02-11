@@ -202,18 +202,21 @@ function fetch_questions($c,$t)
    while($row=mysql_fetch_array($select))
      {
 	   $test=mysql_fetch_array(mysql_query("select type,date from tests where test_id='$row[test_id]' "));
-	   echo '<option value="'.$row['test_id'].'" >';
-   if($test['type']==1)
-    echo 'Quiz 1';
-   else if($test['type']==2)
-    echo 'Quiz 2';
-   else if($test['type']==3)
-    echo 'Mid sem';
-   else if($test['type']==4)
-    echo 'Viva';
-   else if($test['type']==5)
-    echo 'End sem';
-   echo ' on '.$test['date'].'</option>';
+	   if(validateDate($test['date']))
+	   {
+	   	echo '<option value="'.$row['test_id'].'" >';
+   		if($test['type']==1)
+    	echo 'Quiz 1';
+   		else if($test['type']==2)
+    	echo 'Quiz 2';
+   		else if($test['type']==3)
+    	echo 'Mid sem';
+   		else if($test['type']==4)
+    	echo 'Viva';
+   		else if($test['type']==5)
+    	echo 'End sem';
+   		echo ' on '.$test['date'].'</option>';
+	   }
 	 }
    echo '</select><br /><button type="submit" class="btn btn-primary" value="test_id" name="test_id" >Go <i class="icon-white icon-chevron-right"></i></button></form>';
    
@@ -288,8 +291,13 @@ if($_POST['qadd'])
    //echo "New qno: ".$qno;
    //echo $values[0].$values[1];
    //echo $_SESSION[ques_bank_id];
-   
-   
+   $m=mysql_fetch_array(mysql_query("select max_qns as m from tests where test_id='$_SESSION[tid]' "));
+	if($qno>$m['m'])
+	{
+	echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Max Question limit reached</div>';
+	}
+	else
+	{
    $test=mysql_fetch_array(mysql_query("select test_id from ques_bank_no where ques_bank_id='$values[0]' "));
    
    $qn_old=mysql_fetch_array(mysql_query("select if_image from question_bank where ques_bank_id='$values[0]' and ques_id='$values[1]' "));
@@ -306,6 +314,7 @@ if($_POST['qadd'])
 	  }
 	}
    $result=mysql_query("update question_bank set ques_bank_id='$_SESSION[ques_bank_id]' , ques_id='$qno' where   ques_bank_id='$values[0]' and ques_id='$values[1]' ") or die(mysql_error());
+  }
   }
  }
  
@@ -483,6 +492,7 @@ while($ques_bank=mysql_fetch_array($select))
    else if($test['type']==5)
     echo '<span class="text-success" > End sem </span>';
    echo '</span>&nbsp;&nbsp;&nbsp;';
+
 ?>
 <a href="#myModal_test" role="button" data-toggle="modal" >More Info</a>
 

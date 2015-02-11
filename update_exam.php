@@ -18,7 +18,7 @@ if($_GET['update_exam'] || isset($_SESSION['tid']))
  {
    if($_POST['update'])
     {
-	 mysql_query("update tests set course_id='$_SESSION[course]', type='$_POST[exam]', duration='$_POST[duration]', date='$_POST[exp_date]', max_marks='$_POST[max_marks]', equal_weight='$_POST[uniform]', max_qns='$_POST[max_qns]', neg_marking='$_POST[neg_marking]', sets='$_POST[sets]', display='$_POST[display]' where test_id='$_SESSION[tid]' ");
+	 mysql_query("update tests set course_id='$_SESSION[course]', type='$_POST[exam]', duration='$_POST[duration]', date='$_GET[exp_date]', max_marks='$_POST[max_marks]', equal_weight='$_POST[uniform]', max_qns='$_POST[max_qns]', neg_marking='$_POST[neg_marking]', sets='$_POST[sets]', display='$_POST[display]' where test_id='$_SESSION[tid]' ");
      echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Test details updated!</div>';
 	}
   
@@ -43,10 +43,12 @@ echo '<div class="text-left" ><form action="update_exam.php" method="post"><butt
    echo '<h3>Test Summary</h3>';
    echo '<div class="row" ><div class="span5 offset4" >';
    display_test_info($_SESSION['tid']);
+   $test=mysql_fetch_array(mysql_query("select date from tests where test_id='$_SESSION[tid]' "));
+   if(validateDate($test['date']))
+   {
+      echo '<br /><a href="#myModaledit" role="button" class="btn btn-large btn-primary" data-toggle="modal"><i class="icon-white icon-pencil" ></i> Edit</a>&nbsp;&nbsp;&nbsp;<a href="#myModalsch" role="button" class="btn btn-large btn-success" data-toggle="modal"><i class="icon-white icon-flag"></i> Schedule</a><br /><br />';
+   }
    ?>
-   
-<br /><a href="#myModaledit" role="button" class="btn btn-large btn-primary" data-toggle="modal"><i class="icon-white icon-pencil" ></i> Edit</a>&nbsp;&nbsp;&nbsp;<a href="#myModalsch" role="button" class="btn btn-large btn-success" data-toggle="modal"><i class="icon-white icon-flag"></i> Schedule</a><br /><br />
- 
 <!-- Modal -->
 <div id="myModaledit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
