@@ -66,7 +66,7 @@ if($_GET['step']==1)
   $_SESSION['step']=1;
  }
  
- 
+ ////second step in series of setting exam to get details of question paper like max marks,questions count etc.
 if($_GET['step']==2)
  {
   if($_GET['exam'])
@@ -74,13 +74,13 @@ if($_GET['step']==2)
 		//echo $_GET[duration];
 		//echo $_GET[exp_date];
 		
-		if(!validateDate($_GET[exp_date]))
+		if(!validateDate($_GET[exp_date]))/// check if vali date has entered
 		{
 		unset($_GET[exp_date]);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
 		$_SESSION['step']=1;
 		}
-		else if(!validateTime($_GET[duration]))
+		else if(!validateTime($_GET[duration]))//check if valid time has been entered
 		{
 		unset($_GET[duration]);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid duration!</div>';

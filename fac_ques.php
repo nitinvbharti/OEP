@@ -61,7 +61,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		else
 		 $type=1;
 		 
-		 
+		 //list of questions 
 		$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' "));
 		
 	    if(!$no_repeat)
@@ -80,7 +80,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		}
 		//echo '<script>window.location="fac_ques.php";</script>';
 	}
-	else if(isset($_POST['delete']))
+	else if(isset($_POST['delete']))// deleting a questions from database 
 	{
 	    //echo 'hi';
 		//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
@@ -91,7 +91,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
         echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$_POST[qno].' deleted!</div>';
 		//echo '<script>window.location="fac_ques.php";</script>';
 	}
-	else if(isset($_POST['edit']) || isset($_POST['change']))
+	else if(isset($_POST['edit']) || isset($_POST['change'])) //  editing a present question
 	{
 		if(isset($_POST['edit']))
 		{
@@ -117,7 +117,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
                  if(!$test || $test['neg_marking'])
                   echo '<th>-ve Marks</th>';				 
 				?>
-				
+				<!-- Table showing the questions to entered and questions to be selected-->
 				<th>Q-Type</th>
 				<th>Image</th>
 				<th>Operation</th>
@@ -214,6 +214,8 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		 $type=1;
 		 
 		$query_t= mysql_query("update question_bank set ques='$_POST[ques]', ans='$_POST[ans]', marks='$_POST[marks]', options='$op', qtype='$type', if_image='$extension', neg_marks='$_POST[neg_marks]'  where ques_id='$qno'  and ques_bank_id='$_SESSION[ques_bank_id]' ") or die("Died2".mysql_error());
+		
+		//Showing/verifying the added external files in the question
 		
 		if($file_success)
 		 {
