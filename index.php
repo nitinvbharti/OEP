@@ -22,9 +22,9 @@ if($_POST['logout'])
 /////////////////////////////when logout is clicked///////////////////////////////////////////////////
 
 
-
+/////////////////////////////when login is clicked////////////////////////////////////////////////////
 if(isset($_POST['login']))
- {
+ {//////////Check for login credentials of students////////////////////////////////////////
   $select=mysql_query("select name from students where rollnumber='$_POST[username]' and password = '$_POST[password]' ");
   if(mysql_num_rows($select))
    {
@@ -34,7 +34,7 @@ if(isset($_POST['login']))
 	//echo '<script>window.location="student.php";</script>';
    }
   else
-   {
+   {///////////////////////checking for login credentials of faculty//////////////////////////////////
     $select=mysql_query("select name from faculty where faculty_id='$_POST[username]' and password='$_POST[password]' ");
     if(mysql_num_rows($select))
      {
@@ -45,6 +45,9 @@ if(isset($_POST['login']))
      }
    }
 
+
+
+   ///////////////////////////////creating a cookie to remeber the logged in credentials--start//////////////////////////////////
     if(isset($_POST['remember']))
 	 {
 	  if($_SESSION['rollnumber'])
@@ -60,9 +63,11 @@ if(isset($_POST['login']))
 		//echo 'faculty cookies set';
 	   }
 	 }
+
+   ///////////////////////////////creating a cookie to remeber the logged in credentials--------end//////////////////////////////////
 	//echo "admin ok";
  }
- 
+ ///////////////checking and logging in if already a valid cookie exists//////////////////
 if(isset($_COOKIE['rollnumber']) && !isset($_SESSION['rollnumber']))
   {
 	$_SESSION["rollnumber"]=$_COOKIE["rollnumber"];
@@ -79,7 +84,7 @@ if(isset($_COOKIE["faculty_id"]) && !isset($_SESSION['faculty_id']))
 
 
 require("header.php");
-
+////////////////redirecting faculty/student to correct page-------start//////////////
 if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']))
 {
 	if(isset($_SESSION['faculty_id']))
@@ -91,18 +96,20 @@ if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']))
 		echo '<script>window.location="student.php";</script>';
 	}
   
+////////////////redirecting faculty/student to correct page-------end//////////////
 }
 else
 {
-?>
 
+/////////////////form to fill the login data------start///////////////////////
+?>
 <div class="row-fluid text-center" >
 <br />
 <h4><i class="icon-user"></i> User Login</h4>
 <form action="index.php" method="post" name="UserLogin">
 <table align=center >
 <tr>
-<td><input type="text" class="input-medium" name="username"  autocomplete="on" maxlength="9" placeholder="Your Username..."  required/></td>
+<td><input type="text" class="input-medium" name="username"  autocomplete="off" maxlength="9" placeholder="Your Username..."  required/></td>
 </tr>
 <tr>
 <td><input type="password"  class="input-medium" autocomplete="on"  name="password" maxlength="15" placeholder="Your Password..."  required required/></td>
@@ -114,6 +121,8 @@ else
 </form>
 
 <?php
+
+/////////////////form to fill the login data --end///////////////////////
 if(!isset($_SESSION['rollnumber']) && !isset($_SESSION['faculty_id']) && isset($_POST['login']))
  {
 echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid username or password!</div>';
