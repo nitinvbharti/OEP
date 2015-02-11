@@ -75,6 +75,7 @@ session_start();
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
+            <!--sfetch the current user name from database-->
             <a class="brand" href= "<?php if($_SESSION['faculty_id']){ echo "faculty.php"; } else if($_SESSION['rollnumber']) echo 'student.php'; else {echo "index.php";} ?>" >OEP</a>
             <div class="nav-collapse collapse">
 			<ul class="nav">

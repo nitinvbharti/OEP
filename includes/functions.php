@@ -17,7 +17,7 @@ function validateTime($rawtime,$seperator2=':')
 	}
 	return false;
 }
-
+/*
 function validateDate($rawDate,$seperator='-')
     {
 		//echo $rawdate;
@@ -71,7 +71,8 @@ function validateDate($rawDate,$seperator='-')
             }
         }
     }
-	
+    */
+	//find the relevent personal data based on id////////
 function search_who()
 {
 	if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']) )
@@ -143,7 +144,7 @@ function signin_student()
 	return 0;
 	}
 }
-
+///////////////lists which faculty will take what course/////////////
 function list_all_courses($fac_id)
 {
 	//global $con;
@@ -166,7 +167,7 @@ function get_test_id($c,$t)
 		return $tt['test_id'];
 	}
 }
-
+/////////////////////////////////checks if a given faculty teahes a given course/////////////
 function if_okay_fac($c)
 {
 	//global $con;
@@ -181,7 +182,7 @@ function if_okay_fac($c)
 		return 1;
 	}
 }
-
+/////////////////////////////////fetch questions based on test id///////////
 function fetch_questions($c,$t)
 {
  if($_POST['goback'])
