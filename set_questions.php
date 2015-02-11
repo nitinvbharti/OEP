@@ -15,9 +15,10 @@ require("header.php");
 
 if($_SESSION['faculty_id'])
  {
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////fetching the previous data in incomplete exams ////////////////////////
 if($_POST['incomp'])
  {
+
   $_SESSION['tid']=$_POST['test_id'];
   $test=mysql_fetch_array(mysql_query("select step,course_id,type from tests where test_id='$_SESSION[tid]' "));
   $_SESSION['step']=$test['step'];
@@ -26,6 +27,7 @@ if($_POST['incomp'])
  }
 else if($_SESSION['tid']=="" && $_SESSION['course']=="")
  {
+  //////////////////////////////////////if creating the course earlier attempted/////////////////////////////
 $query=mysql_query("select test_id, step, course_id,type from tests where step<4 ");
 $count=mysql_num_rows($query);
 if($count==1)
@@ -37,20 +39,17 @@ if($count==1)
   $_SESSION['type']=$test['type'];
  }
 if($count>1)
- {
+ {///////////////////////////////////if  previously unconfigured exam exists//////////////////////////
   echo '<div class="row text-center" ><p>You have more than one incompletely configured test! Please select one below:</p>';
   echo '<form action=set_questions.php method=post ><select name=test_id >';
   while($row=mysql_fetch_array($query))
-   {
+   {//////////////////////////////////fetching the previous data////////////////////////////////
      echo '<option value='.$row[test_id].' >'.$row[course_id].': Test Id: '.$row[test_id].'</option>';
    }
   echo '</select><br /><input type=submit class="btn btn-primary" name=incomp value="Go" /></form></div>';
  }
  }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 if($_SESSION['tid']=="" && $_SESSION['course']=="" && $count==0)
@@ -109,7 +108,7 @@ if($_GET['step']==2)
 		
  }
  
- 
+ ////////////third and final stage for creation of new exam////////////////////////
 if($_GET['step']==3)
  {
   if(isset($_SESSION['tid']) && $_GET['max_marks']!="" )

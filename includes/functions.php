@@ -25,7 +25,7 @@ function validateDate($rawDate,$seperator='-')
         $ndate=explode($seperator,$rawDate);
         //var_dump($ndate);
 		$cdate=date("Y-m-d");
-		//echo $cdate;
+		//echo $cdate
 		$expldate=explode($seperator,$cdate);
         if($ndate[0]!=$expldate[0] || $ndate[1]<$expldate[1] || ($ndate[1]==$expldate[1] && $ndate[2]<$expldate[2]))
         {
@@ -52,6 +52,7 @@ function validateDate($rawDate,$seperator='-')
         }
         else
         {
+           
             $daysArray=[31,28,31,30,31, 30,31,31,30,31, 30,31];
             if($ndate[1]>=1&&$ndate[1]<=12)
             {

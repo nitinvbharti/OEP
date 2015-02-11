@@ -85,7 +85,7 @@ else  //Later do else if for each of choicess....
 }//end of if
 else
  {
- echo '<script>window.location="index.php";</script>';
+ echo '<script>window.location="index.php";</script>';///redirecting to the main page
  }
 require("footer.php");
 ?>
