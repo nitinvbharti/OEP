@@ -147,6 +147,9 @@ if($_SESSION['step']==4)
 
 <div class="progress progress-striped active" >
 
+
+
+<!--progress bar showing question setting progress-->
 <?php
 if($_SESSION['step']>0)
  {
@@ -167,6 +170,9 @@ if($_SESSION['step']>2)
 echo '</div>';
  
 ?>
+<!--end-->
+
+<!--showing the type of exam being set-->
   <div class="row text-center">
   <div class="span3 text-left">
   <?php
@@ -188,7 +194,7 @@ echo '</div>';
   echo '<p class="lead"><b>Prof:</b> <abbr title="'.$_SESSION['name'].'" ><span class="text-success" >  '.$_SESSION['faculty_id'].'</span></p>';
   ?>
   </div>
-  
+  <!--end-->
 <?php
 if($_SESSION['step']==1)
  {
@@ -201,6 +207,7 @@ if($_SESSION['step']==1)
 	 $test=mysql_fetch_array(mysql_query("select type, duration, date from tests where test_id='$_SESSION[tid]' "));
 	}
   ?>
+  <!-- selecting the type of the exam to be attempted-->
   <div class="span4 offset1" >
   <p class="lead" >Exam scheduling</p>
   <form class="form-horizontal" action="set_questions.php" method="get" >
@@ -218,7 +225,7 @@ if($_SESSION['step']==1)
   </div>
 
 
-
+<!--duration of exam-->
   <div class="control-group" >
   <label class="control-label" for="duration"  ><strong>Duration: </strong></label>
   <div class="controls">
@@ -230,13 +237,14 @@ if($_SESSION['step']==1)
   </div>
   </div>
   
+  <!--date of the exam-->
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
   <input type="date" class="input" name="exp_date" id="exp_date" maxlength="10" <?php  if($test['duration']) echo "value=".$test['duration']; ?> placeholder="YYYY-MM-DD" />
   </div>
   </div>
-  
+  <!--end-->
   <div class="control-group" >
   <div class="controls">
   <button type="submit" class="btn btn-primary" name="step" value="2" >Next <i class="icon-chevron-right icon-white"></i></button>
@@ -249,7 +257,7 @@ if($_SESSION['step']==1)
 
 }
  
- 
+ //getting the question paper detail
 if($_SESSION['step']==2)
  {	
    if(isset($_SESSION['tid']))
@@ -320,6 +328,7 @@ if($_SESSION['step']==2)
   
   </form>
   </div>
+  <!-- end of getting the data for question-->
   
 <?php
 }
