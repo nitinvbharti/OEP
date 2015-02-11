@@ -11,10 +11,10 @@ if($_SESSION['tab']!=1)
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 require("header.php");
-
+///\\\\\\\\\\\\\\\\\\\\\\checking credentials\\\\\\\\\\\\\\\\\\\\
 if(isset($_SESSION['faculty_id']))
 {
- 
+ ////////////////condition checking for rediecting the page---start///////////////////////////
 if(isset($_POST['set_exam']) || isset($_POST['evaluate']) || isset($_POST['question']) || isset($_POST['schedule']) || isset($_POST['exams']))
 {
 	unset($_SESSION['init']);
@@ -39,7 +39,7 @@ if(isset($_POST['set_exam']) || isset($_POST['evaluate']) || isset($_POST['quest
 	 }
 	 
 	 
-}
+}////////////////condition checking for rediecting the page---end///////////////////////////
 else  //Later do else if for each of choicess....
 {
 	$fac_id=$_SESSION['faculty_id'];
@@ -66,6 +66,7 @@ else  //Later do else if for each of choicess....
 		</table>
 		<br>
 		<br>
+		<?php /////////////////////////buttons for selecting actions to perform---------start////////////?>
 		<table align="center" cellpadding="15" >
 		<tr>
 			<td><input class="btn btn-primary btn-large" name="set_exam" type="submit" value="Set Exam"></td>
@@ -76,6 +77,7 @@ else  //Later do else if for each of choicess....
 			
 		</tr>
 		</table>
+		<?php /////////////////////////buttons for selecting actions to perform---------start////////////?>
 	</form>
 	</div>
 <?php
@@ -83,7 +85,7 @@ else  //Later do else if for each of choicess....
 }//end of if
 else
  {
- echo '<script>window.location="index.php";</script>';
+ echo '<script>window.location="index.php";</script>';///redirecting to the main page
  }
 require("footer.php");
 ?>

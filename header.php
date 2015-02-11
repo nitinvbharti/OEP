@@ -75,6 +75,7 @@ session_start();
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
+            <!--sfetch the current user name from database-->
             <a class="brand" href= "<?php if($_SESSION['faculty_id']){ echo "faculty.php"; } else if($_SESSION['rollnumber']) echo 'student.php'; else {echo "index.php";} ?>" >OEP</a>
             <div class="nav-collapse collapse">
 			<ul class="nav">
@@ -91,10 +92,8 @@ session_start();
                 <li class="dropdown <?php if($_SESSION['tab']=="6") echo "active"; ?>"  >
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                    <li><a href="faculty.php">Previous papers</a></li>
-                    <li><a href="faculty.php">Current Exams</a></li>
                     <li><a href="history.php">My History</a></li>
-                    <li><a href="faculty.php">About OEP</a></li>
+                    <li><a href="about.php">About OEP</a></li>
                     <li><a href="feedback.php">Submit Feedback</a></li>
                   </ul>
                 </li>

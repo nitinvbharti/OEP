@@ -17,7 +17,6 @@ function validateTime($rawtime,$seperator2=':')
 	}
 	return false;
 }
-
 function validateDate($rawDate,$seperator='-')
     {
 		//echo $rawdate;
@@ -25,7 +24,7 @@ function validateDate($rawDate,$seperator='-')
         $ndate=explode($seperator,$rawDate);
         //var_dump($ndate);
 		$cdate=date("Y-m-d");
-		//echo $cdate;
+		//echo $cdate
 		$expldate=explode($seperator,$cdate);
         if($ndate[0]!=$expldate[0] || $ndate[1]<$expldate[1] || ($ndate[1]==$expldate[1] && $ndate[2]<$expldate[2]))
         {
@@ -52,6 +51,7 @@ function validateDate($rawDate,$seperator='-')
         }
         else
         {
+           
             $daysArray=[31,28,31,30,31, 30,31,31,30,31, 30,31];
             if($ndate[1]>=1&&$ndate[1]<=12)
             {
@@ -124,6 +124,7 @@ function validateDate2($rawDate,$seperator='-')
         }
     }
 
+	//find the relevent personal data based on id////////
 function search_who()
 {
 	if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']) )
@@ -195,7 +196,7 @@ function signin_student()
 	return 0;
 	}
 }
-
+///////////////lists which faculty will take what course/////////////
 function list_all_courses($fac_id)
 {
 	//global $con;
@@ -218,7 +219,7 @@ function get_test_id($c,$t)
 		return $tt['test_id'];
 	}
 }
-
+/////////////////////////////////checks if a given faculty teahes a given course/////////////
 function if_okay_fac($c)
 {
 	//global $con;
@@ -233,7 +234,7 @@ function if_okay_fac($c)
 		return 1;
 	}
 }
-
+/////////////////////////////////fetch questions based on test id///////////
 function fetch_questions($c,$t)
 {
  if($_POST['goback'])
