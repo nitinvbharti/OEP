@@ -188,7 +188,9 @@ else
    $select = mysql_query("select test_id, type, date from tests where course_id='$_SESSION[course]' ");
    while($test=mysql_fetch_array($select))
      {
-	   echo '<option value="'.$test['test_id'].'" >';
+      if(validateDate2($test['date']))
+      {
+	     echo '<option value="'.$test['test_id'].'" >';
        if($test['type']==1)
          echo 'Quiz 1';
        else if($test['type']==2)
@@ -200,6 +202,7 @@ else
        else if($test['type']==5)
          echo 'End sem';
        echo ' on '.$test['date'].'</option>';
+     }
 	 }
    echo '</select><br /><button type="submit" class="btn btn-primary" value="yes" name="update_exam" >Go <i class="icon-white icon-chevron-right"></i></button></form><br /><br /><br /><br /><br /><br /><br /><br /><br />';
  }
