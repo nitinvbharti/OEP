@@ -635,28 +635,28 @@ while($ques_bank=mysql_fetch_array($select))
 
 
 
-function display_test_info($tid)
+function display_test_info($course,$exam,$date)
 {
-$test=mysql_fetch_array(mysql_query("select * from tests where test_id='$tid' "));
+$test=mysql_fetch_array(mysql_query("select * from test where course_id='$course' and examtype='$exam' and date='$date' "));
   echo '<table class="table table-bordered table-hover table-striped" >';
    echo '<tr><td><b>Course:</b></td><td>'.$_SESSION['course'].'</td></tr>';
    echo '<tr><td><b>Exam: </b></td><td>';
-   if($test['type']==1)
+   if($test['examtype']==1)
     echo '<span class="text-success" > Quiz 1 </span>';
-   else if($test['type']==2)
+   else if($test['examtype']==2)
     echo '<span class="text-success" > Quiz 2 </span>';
-   else if($test['type']==3)
+   else if($test['examtype']==3)
     echo '<span class="text-success" > Mid sem </span>';
-   else if($test['type']==4)
+   else if($test['examtype']==4)
     echo '<span class="text-success" > Viva </span>';
-   else if($test['type']==5)
+   else if($test['examtype']==5)
     echo '<span class="text-success" > End sem </span>';
    echo '</td></tr>';
    
 	  echo '<tr><td><b>Duration: </b></td><td>'.$test['duration'].'</td></tr>';
 	  echo '<tr><td><b>Date of Exam: </b></td><td>'.$test['date'].'</td></tr>';
 	  echo '<tr><td><b>Maximum Marks: </b></td><td>'.$test['max_marks'].'</td></tr>';
-	  echo '<tr><td><b>Equal Weightage: </b></td><td>';
+	  /*echo '<tr><td><b>Equal Weightage: </b></td><td>';
 	  if($test['equal_weight']==1)
 	   echo "Yes";
 	  else
@@ -674,8 +674,8 @@ $test=mysql_fetch_array(mysql_query("select * from tests where test_id='$tid' ")
 	  if($test['display']==1)
 	   echo "Yes";
 	  else
-	   echo "No";
-	  echo '</td></tr></table>';
+	   echo "No";*/
+	  echo '</table>';
 }
 
 

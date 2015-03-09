@@ -18,8 +18,9 @@ if(isset($_SESSION['faculty_id']))
 if(isset($_POST['set_exam']) || isset($_POST['evaluate']) || isset($_POST['question']) || isset($_POST['schedule']) || isset($_POST['exams']))
 {
 	unset($_SESSION['init']);
-	unset($_SESSION['tid']);
-	unset($_SESSION['ques_bank_id']);
+	//unset($_SESSION['exam']);
+	//unset($_SESSION['date']);
+	unset($_SESSION['step']);
 	$_SESSION['course'] = $_POST['course'];
 	if(isset($_POST['question']))
 	 {

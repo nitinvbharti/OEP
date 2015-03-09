@@ -339,7 +339,7 @@ else
  echo '<form action="student.php" method="post" ><select name="course">';
  while($row=mysql_fetch_array($select))
   {
-    echo '<option value='.$row['course_id'].'>'.$row['course_id'].'</option> ';
+    echo '<option value='.$row['course_id'].'>'.$row['course'].'</option> ';
   }
  echo '</select>';
 
