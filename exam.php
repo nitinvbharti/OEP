@@ -4,71 +4,40 @@ require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
  echo '<div class="row-fluid text-center">';
- /*
+ 
 if(isset($_POST['complete']) || isset($_SESSION['complete']))
  {
   unset($_SESSION['course']);
   $_SESSION['complete']=1;
-  mysql_query("update student_exam_status set done=1, duration='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' ");
- }
-else
+ // $testtype=mqsql_query("SELECT examtype FROM test WHERE course_id='$_SESSION[course_id]' and exam_activation='1'");
+  $testtype=$_SESSION['examtype'];
+  if($testtype==1)
+  	$exam="q1_taken";
+  elseif ($testtype==2)
+  	$exam="q2_taken";
+  elseif ($testtype==3)
+  	$exam="endsem_taken";
+  elseif ($testtype==4)
+  	$exam="supplementary_taken";
+  elseif ($testtype==5)
+  	$exam="makeup_taken";
 
+  mysql_query("update student_exam_status set '$exam'=1,where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[tid]' ");
+ }
+
+else 
  {
  if(isset($_POST['go']) || isset($_SESSION['course']))
   {
-    if(!isset($_SESSION['course']))
-	 {
+    //if(!isset($_SESSION['course']))
+	 //{
 	  //echo 'asdfasf';
-      $_SESSION['course']=$_POST['course'];
-	 }
-*/  
- 
+     // $_SESSION['course']=$_POST['course'];
+	 //}
 	
-	$eligible=mysql_fetch_array(mysql_query("select course_id from enroll where rollnumber='$_SESSION[rollnumber]' "));
-	//var_dump($eligible);
-	//$_SESSION['course']="COM305";
-	$_SESSION['course']=$eligible[0];
-	echo $_SESSION['course'];
-	$exam="SELECT examtype from test where course_id='$_SESSION[course]'";
-	$test=mysql_fetch_array(mysql_query($exam));
- 	$_SESSION['exmtype']=$test[0];
- if($test)
-	{
-
-		echo "You test will start in Five minutes";
-		//header('Refresh: 3;url=exam.php');
- 		// header("Refresh: 5;url=exam.php");
-	echo '<script>window.location="exam.php";</script>';
-	}
-
-else
-	{
-
-		echo "</br>NO exam has been activated for you";
-		//echo '<script>window.location="exam.php";</script>';
-	}
-
-
-
-	/*
-   if($test && !$eligible)
-	{
-	   //unset($_SESSION['tid']);
-	if(!isset($_SESSION['tid']))
-	 {
-      $test=mysql_fetch_array(mysql_query("select test_id, type from tests where active=1 and course_id='$_SESSION[course]' "));
-	  if($test)
-	   {
-	    $course=mysql_fetch_array(mysql_query("select name from courses where course_id='$test[course_id]' "));
-	    $_SESSION['tid']=$test['test_id'];
-	    $_SESSION['type']=$test['type'];
-	    //$_SESSION['course']=$test['course_id'];
-	    $_SESSION['course_name']=$course['name'];
-	   }
-	 }
-	
-	
-	if(isset($_SESSION['tid']))
+ //unset($_SESSION['tid']);
+		
+	//if(isset($_SESSION['tid']))
 	 {
 	  if(!mysql_fetch_array(mysql_query("select done from exam_taken where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]'")))
 	   {
@@ -197,7 +166,7 @@ else
 	   update_answers($_POST['ops']);
 	  }
 	  
-	 update_duration();
+	   update_duration();
 	   $question=mysql_fetch_array(mysql_query("select * from question_bank where ques_id='$_SESSION[cqn]' and ques_bank_id=(select ques_bank_id from ques_bank_no where test_id='$_SESSION[tid]')"));
 	   $options=explode("|",$question['options']);
 	   
@@ -332,32 +301,48 @@ else
 	 echo '<div class="row">';
 	 echo '<div class="span4 offset4"><br /><button class="btn btn-primary btn-large btn-block" name="complete" ><i class="icon-white icon-flag" ></i> Test Completed</button></span></div>';
 	 echo '</div></form>';
-	 }
+	 
    }
-   else
-    {
 
-	 if($eligible)
-	  {
-	   $_SESSION['tid']='1';
-	  }
-	 if(isset($_SESSION['tid']))
-	  {
-         unset($_SESSION['course']);
-	     $_SESSION['complete']=1;
-	  }
-	 else
-	 {
-      echo '<br /><div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>There are no currently going exams in this course!</div>';
-	  unset($_SESSION['course']);
-	 }
-    }
+
   }
  }
-  */
+/*  
+ if(!isset($_SESSION['course']))
+  {
+   if(!isset($_SESSION['complete']))
+    {
+ echo '<br /><br /><br /><p class="lead" ><big>Select the Course</big></p>';
+
+ $select=mysql_query("select course_id from enroll where rollnumber='$_SESSION[rollnumber]' ");
+ echo '<form action="student.php" method="post" ><select name="course">';
+ while($row=mysql_fetch_array($select))
+  {
+    echo '<option value='.$row['course_id'].'>'.$row['course_id'].'</option> ';
+  }
+ echo '</select>';
+
+
+ echo '<br /><br /><button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Take Exam</button>';
+ echo '</form>';
+    }
+   else
+    {
+	 update_duration();
+     echo '<div class="row-fluid" ><br /><br /><br /><br /><br /><br /><br /><i class="icon-thumbs-up" ></i> <h1 class="text-success" >Test Completed!!!</h1></div>';
+	}
+  }
  
-	
-echo '</div>';
+
+ //echo '</div>';
+ */
 }
+else
+{
+ //echo '<script>window.location="index.php";</script>';
+}
+
+
+
 include("footer.php");
 ?>

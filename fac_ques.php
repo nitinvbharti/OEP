@@ -11,14 +11,26 @@ if($_SESSION['tab']!=7)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 require("header.php");
 
+
+
 if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
  {
-  if(isset($_POST['delete']) || isset($_POST['edit']) || isset($_POST['add']) || isset($_POST['change']))
-   {
-   	$max=mysql_fetch_array(mysql_query("select max(ques_id) as max from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' "));
-    $qno=$max['max']+1;
-	if(isset($_POST['add']))
-	{
+ 	////////////To make all data default if reached from finish in set_questions.php
+ 	$check=mysql_fetch_array(mysql_query("select step from test where examtype='$_SESSION[exam]' and course_id='$_SESSION[course]' and date='$_SESSION[date]' "));
+ 	//echo "if i m here".$check[step]."need help";
+ 	if($check['step']==4)
+ 	{
+ 		echo "i reached here";
+ 		unset($_SESSION['exam']);
+		unset($_SESSION['date']);
+		unset($_SESSION['step']);
+ 	}
+  	if(isset($_POST['delete']) || isset($_POST['edit']) || isset($_POST['add']) || isset($_POST['change']))
+   	{
+   		$max=mysql_fetch_array(mysql_query("select max(ques_id) as max from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' "));
+    	$qno=$max['max']+1;
+		if(isset($_POST['add']))
+		{
 		$m=mysql_fetch_array(mysql_query("select max_qns as m from tests where test_id='$_SESSION[tid]' "));
         if($qno>$m['m'])
         {
@@ -26,57 +38,58 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
         }
         else
         {
-	    //echo "hello";
-		//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
-		$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
-		//echo "File: ".$_FILES["file"]["name"][0];
-		if($_FILES["file"]["name"])
-		 {
-		  //echo "hai";
-		  $allowedExts = array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG");
-          $extension = end(explode(".", $_FILES["file"]["name"]));
-		   if ((($_FILES["file"]["type"] == "image/gif")|| ($_FILES["file"]["type"] == "image/jpeg")|| ($_FILES["file"]["type"] == "image/jpg")|| ($_FILES["file"]["type"] == "image/png"))&& ($_FILES["file"]["size"] < 3000000 )&& in_array($extension, $allowedExts))
-		       {
-                 if ($_FILES["file"]["error"] > 0 )
-                   {
-                  echo "Some Unexpected Error. Try Again.. ";
-                   }
-                else
-                   { 
-				    $file_success=1;
-					//echo "fine";
-		           }
-	           }
-		   else
-		      {
-		       echo "file is not within range/ unsupported format";
-		      }
-		 }
-		else
-		 {
-		  $extension=0;
-		 }
-	    if($_POST['qtype']=="Single")
-		 $type=0;
-		else
-		 $type=1;
-		 
-		 //list of questions 
-		$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' "));
-		
-	    if(!$no_repeat)
-		 {
-		  //echo "hi";
-		$query_t= mysql_query("INSERT INTO question_bank VALUES ('$qno','$_SESSION[ques_bank_id]','$_POST[ques]','$_POST[ans]','$_POST[marks]', '$op', '$type','$extension', '$_POST[neg_marks]' )") or die("Died2".mysql_error());
-		if($file_success)
-		 {
-			if(file_exists($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension))
-			 unlink($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
-            move_uploaded_file($_FILES["file"]["tmp_name"],"img/qns/".$_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
-		 }
-        echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$qno.' added!</div>';
-		$_SESSION['ques_id']=$qno;
-		 }
+		    //echo "hello";
+			//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
+			$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
+			//echo "File: ".$_FILES["file"]["name"][0];
+			if($_FILES["file"]["name"])
+			{
+			  	//echo "hai";
+			  	$allowedExts = array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG");
+	          	$extension = end(explode(".", $_FILES["file"]["name"]));
+			   	if ((($_FILES["file"]["type"] == "image/gif")|| ($_FILES["file"]["type"] == "image/jpeg")|| ($_FILES["file"]["type"] == "image/jpg")|| ($_FILES["file"]["type"] == "image/png"))&& ($_FILES["file"]["size"] < 3000000 )&& in_array($extension, $allowedExts))
+			    {
+	                if ($_FILES["file"]["error"] > 0 )
+	                {
+	                  	echo "Some Unexpected Error. Try Again.. ";
+	                }
+	              	else
+	                { 
+					    $file_success=1;
+						//echo "fine";
+			        }
+		        }
+			   else
+			    {
+			       echo "file is not within range/ unsupported format";
+			    }
+			}
+			else
+			{
+			 	 $extension=0;
+			}
+		    
+		    if($_POST['qtype']=="Single")
+			 	$type=0;
+			else
+			 	$type=1;
+			 
+			//list of questions 
+			$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' "));
+			
+		    if(!$no_repeat)
+			{
+			 	//echo "hi";
+				$query_t= mysql_query("INSERT INTO question_bank VALUES ('$qno','$_SESSION[ques_bank_id]','$_POST[ques]','$_POST[ans]','$_POST[marks]', '$op', '$type','$extension', '$_POST[neg_marks]' )") or die("Died2".mysql_error());
+				if($file_success)
+			 	{
+					if(file_exists($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension))
+				 		unlink($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
+	            	move_uploaded_file($_FILES["file"]["tmp_name"],"img/qns/".$_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
+			 	}
+	        	echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$qno.' added!</div>';
+				$_SESSION['ques_id']=$qno;
+			}
 		}
 		//echo '<script>window.location="fac_ques.php";</script>';
 	}
@@ -231,7 +244,7 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 	 {
 	  fetch_questions($_SESSION['course'],$_SESSION['tid']);
 	 }
- }//end of if
+}//end of if
 else
  {
     echo '<script>window.location="index.php";</script>';
