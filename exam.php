@@ -4,7 +4,22 @@ require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
  echo '<div class="row-fluid text-center">';
- 
+echo(" Current Time:"); 
+echo '<div id=clock>';
+
+echo '<script>
+var myVar=setInterval(function(){myTimer()},1000);
+myVar.style.color = "Red";
+    myVar.style.fontSize = "large";
+
+function myTimer() {
+    var d = new Date();
+    document.getElementById("clock").innerHTML = d.toLocaleTimeString();
+    
+}
+</script>';
+echo '</div>';
+
 if(isset($_POST['complete']) || isset($_SESSION['complete']))
  {
   unset($_SESSION['course']);
@@ -22,7 +37,7 @@ if(isset($_POST['complete']) || isset($_SESSION['complete']))
   elseif ($testtype==5)
   	$exam="makeup_taken";
 
-  mysql_query("update student_exam_status set '$exam'=1,where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[tid]' ");
+  mysql_query("update student_exam_status set '$exam'=1 where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[tid]' ");
  }
 
 else 
@@ -77,6 +92,17 @@ else
 	  echo ' - <span class="text-success"><abbr title="'.$_SESSION['course_name'].'" >'.$_SESSION['course'].'</abbr></span></big></span></div>';
    
    echo '<div class="span4 text-right">';
+echo '<div id=clock>';
+
+echo '<script>
+var myVar=setInterval(function(){duration()},1000);
+
+function myTimer() {
+    var d = new Date();
+    document.getElementById("clock").innerHTML = d.toLocaleTimeString();
+}
+</script>';
+echo '</div>';
    duration();
    echo '</div>';
    echo '</div>';

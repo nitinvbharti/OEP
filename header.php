@@ -16,8 +16,6 @@ session_start();
     <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen" >
     <link href="css/docs.css" rel="stylesheet" media="screen"  media="screen" >
     <link href="css/prettify.css" rel="stylesheet" media="screen" >
-	
-	
     <link rel="stylesheet" href="css/style.css" type="text/css"  media="screen" >
 <style>
       html,

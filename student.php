@@ -38,7 +38,9 @@ else
 		echo "You test will start in Five minutes";
 		//header('Refresh: 3;url=exam.php');
  		// header("Refresh: 5;url=exam.php");
+	//date ( string $format [, int $timestamp = time() ] )
 	echo '<script>window.location="exam.php";</script>';
+
 	}
 
 else

@@ -790,6 +790,7 @@ function duration()
 		  $_SESSION['hrs']+=1;
 		 }
 		 */
+		
         $_SESSION['secs']=$_SESSION['duration']%60;
 		if($_SESSION['duration']>3600)
 		 {
@@ -804,7 +805,7 @@ function duration()
 		 $_SESSION['hrs']=floor($_SESSION['duration']/3600);
 
 		
-		
+
 		echo '<span class="lead"> Time Spent: ';
 		if($_SESSION['hrs']<10)
 		 echo '0';
