@@ -29,7 +29,7 @@ function validateDate($rawDate,$seperator='-')
         }
         if($ndate[0]%4==0)
         {
-            $daysArray=[31,29,31,30,31,30,31,31,30,31,30,31];
+            $daysArray=array(31,29,31,30,31,30,31,31,30,31,30,31);
             if($ndate[1]>=1 && $ndate[1]<=12)
             {
                 if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
@@ -49,7 +49,7 @@ function validateDate($rawDate,$seperator='-')
         else
         {
            
-            $daysArray=[31,28,31,30,31, 30,31,31,30,31, 30,31];
+            $daysArray=array(31,28,31,30,31, 30,31,31,30,31, 30,31);
             if($ndate[1]>=1&&$ndate[1]<=12)
             {
                 if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
@@ -83,7 +83,7 @@ function validateDate2($rawDate,$seperator='-')
         }
         if($ndate[0]%4==0)
         {
-            $daysArray=[31,29,31,30,31,30,31,31,30,31,30,31];
+            $daysArray=array(31,29,31,30,31,30,31,31,30,31,30,31);
             if($ndate[1]>=1 && $ndate[1]<=12)
             {
                 if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
@@ -102,7 +102,7 @@ function validateDate2($rawDate,$seperator='-')
         }
         else
         {
-            $daysArray=[31,28,31,30,31, 30,31,31,30,31, 30,31];
+            $daysArray=array(31,28,31,30,31, 30,31,31,30,31, 30,31);
             if($ndate[1]>=1&&$ndate[1]<=12)
             {
                 if($ndate[2]>=0&&$ndate[2]<=$daysArray[$ndate[1]-1])
@@ -218,7 +218,7 @@ function find_examtype($examtype)
 function list_all_courses($fac_id)
 {
 	//global $con;
-	$course_set = mysql_query("SELECT * FROM courses WHERE faculty_id='$_SESSION[faculty_id]'") or die(mysql_error());
+	$course_set = mysql_query("SELECT * FROM slot_wise_courses WHERE faculty_id='$_SESSION[faculty_id]'") or die(mysql_error());
 	return $course_set;
 }
 
@@ -749,6 +749,7 @@ function duration()
 		  $_SESSION['hrs']+=1;
 		 }
 		 */
+		
         $_SESSION['secs']=$_SESSION['duration']%60;
 		if($_SESSION['duration']>3600)
 		 {
@@ -763,7 +764,7 @@ function duration()
 		 $_SESSION['hrs']=floor($_SESSION['duration']/3600);
 
 		
-		
+
 		echo '<span class="lead"> Time Spent: ';
 		if($_SESSION['hrs']<10)
 		 echo '0';
