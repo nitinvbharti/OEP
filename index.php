@@ -9,7 +9,7 @@ if($_POST['logout'])
   {
   	if(isset($_SESSION['rollnumber']))
   		{
-  			$dt = new DateTime();
+  		$dt = new DateTime();
        $dtformatted=$dt->format('Y-m-d H:i:s');
        mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
   		}
@@ -50,7 +50,7 @@ if(isset($_POST['login']))
        		unset($_SESSION['rollnumber']);
        		$_SESSION['multilogin']='1';
        	}
-       elseif($check)
+       elseif($check[1]=='0')
        		{mysql_query("UPDATE login set loggedin='1',lastlogin='$dtformatted' where rollnumber='$_SESSION[rollnumber]'");
    	   		//echo $dtformatted;
    	   		}

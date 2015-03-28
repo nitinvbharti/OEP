@@ -3,14 +3,13 @@ session_start();
 require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
- echo '<div class="row-fluid text-center">';
+ echo '<div class="row-fluid text-center id=clock">';
 echo(" Current Time:"); 
-echo '<div id=clock>';
-
+//echo '<div id=clock>';
 echo '<script>
 var myVar=setInterval(function(){myTimer()},1000);
 myVar.style.color = "Red";
-    myVar.style.fontSize = "large";
+myVar.style.fontSize = "large";
 
 function myTimer() {
     var d = new Date();
@@ -19,205 +18,204 @@ function myTimer() {
 }
 </script>';
 echo '</div>';
+if($_POST['logout'])
+  {
+  		$dt = new DateTime();
+       $dtformatted=$dt->format('Y-m-d H:i:s');
+  	 mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+  	/*if(isset($_SESSION['rollnumber']))
+  		{
+  		$dt = new DateTime();
+       $dtformatted=$dt->format('Y-m-d H:i:s');
+       mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+  		}*/
+    session_destroy();
+	if(isset($_COOKIE["rollnumber"]))
+	  {
+       setcookie("rollnumber","",time()-3600*4*365*10);
+	  }
+	if(isset($_COOKIE["faculty_id"]))
+	  {
+       setcookie("faculty_id","",time()-3600*4*365*10);
+	  }
+	setcookie("name","",time()-3600*4*365*10);
+    echo '<script>window.location="index.php";</script>';
 
+  }
+
+$exam=$_SESSION['examtype'].'_'.'taken';
+//echo $exam;
 if(isset($_POST['complete']) || isset($_SESSION['complete']))
  {
-  unset($_SESSION['course']);
   $_SESSION['complete']=1;
- // $testtype=mqsql_query("SELECT examtype FROM test WHERE course_id='$_SESSION[course_id]' and exam_activation='1'");
-  $testtype=$_SESSION['examtype'];
-  if($testtype==1)
-  	$exam="q1_taken";
-  elseif ($testtype==2)
-  	$exam="q2_taken";
-  elseif ($testtype==3)
-  	$exam="endsem_taken";
-  elseif ($testtype==4)
-  	$exam="supplementary_taken";
-  elseif ($testtype==5)
-  	$exam="makeup_taken";
-
-  mysql_query("update student_exam_status set '$exam'=1 where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[tid]' ");
+  $val=mysql_query("update student_exam_status set $exam=1 where rollnumber='$_SESSION[rollnumber]'and course_id='$_SESSION[course]' ");
+ //var_dump($val);
+  unset($_SESSION['course']);
+  unset($_SESSION['rollnumber']);
+  echo "<div class='row'>";
+  echo '<div class="span12 text-center">';
+  echo '<span class="lead" >Congrats you have successfully Completed The test</span>';
+  unset($_SESSION['course']);
+  echo '</div></div>';
+ echo '<script>
+window.location="index.php";
+}
+</script>';
+  mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+  echo '<script></script>';
  }
-
 else 
  {
+ $ExamTableName=$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'];
+ $_SESSION['ExamTableName']=$ExamTableName;
+   //	echo $ExamTableName;
  if(isset($_POST['go']) || isset($_SESSION['course']))
-  {
-    //if(!isset($_SESSION['course']))
-	 //{
-	  //echo 'asdfasf';
-     // $_SESSION['course']=$_POST['course'];
-	 //}
-	
- //unset($_SESSION['tid']);
-		
-	//if(isset($_SESSION['tid']))
-	 {
-	  if(!mysql_fetch_array(mysql_query("select done from exam_taken where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]'")))
-	   {
-	    mysql_query("insert into exam_taken set rollnumber='$_SESSION[rollnumber]', test_id='$_SESSION[tid]' ");
-	   }
-	  
+  {	
+
+
 	  echo '<br /><div class="row-fluid" >';
 	  echo '<div class="span4 text-left">';
 	  echo '<span class=lead >Max Marks: ';
-	  if($test['equal_weight'])
-	   {
-	    echo $test['max_marks'];
-	   }
-	  else
-	   {
+	  
 	    if(!isset($_SESSION['max_marks']))
 		 {
-	    $marks=mysql_fetch_array(mysql_query("select sum(marks) as max_marks from question_bank where ques_bank_id=(select ques_bank_id from ques_bank_no where test_id='$_SESSION[tid]') "));
+	    $marks=mysql_fetch_array(mysql_query("select sum(marks) as max_marks from $ExamTableName"));
 		$_SESSION['max_marks']=$marks['max_marks'];
 		 }
 		echo $_SESSION['max_marks'];
-	   }
 	  echo '</span>';
 	  echo '</div>';
-	  echo '<div class="span4"><span class="lead text-info"><big>';
 
-    if($_SESSION['tid']==1)
-    echo 'Quiz 1';
-   else if($_SESSION['tid']==2)
-    echo 'Quiz 2';
-   else if($_SESSION['tid']==3)
-    echo 'Mid sem';
-   else if($_SESSION['tid']==4)
-    echo 'Viva';
-   else if($_SESSION['tid']==5)
-    echo 'End sem';
-	  echo ' - <span class="text-success"><abbr title="'.$_SESSION['course_name'].'" >'.$_SESSION['course'].'</abbr></span></big></span></div>';
-   
+
+
+	echo '<div class="span4"><span class="lead text-info"><big>';
+    echo $_SESSION['examtype'];
+	echo ' - <span class="text-success"><abbr title="'.$_SESSION['course_name'].'" >'.$_SESSION['course'].'</abbr></span></big></span></div>';
    echo '<div class="span4 text-right">';
-echo '<div id=clock>';
-
-echo '<script>
-var myVar=setInterval(function(){duration()},1000);
-
-function myTimer() {
-    var d = new Date();
-    document.getElementById("clock").innerHTML = d.toLocaleTimeString();
-}
-</script>';
-echo '</div>';
    duration();
    echo '</div>';
    echo '</div>';
-	 
-	 if(!isset($_SESSION['ques_bank_id']))
-	  {
-	    $select=mysql_query("select ques_id, ques_bank_id from question_bank where ques_bank_id=(select ques_bank_id from ques_bank_no where test_id='$_SESSION[tid]') ");
-	    $qbank=0;
-	 while($qn=mysql_fetch_array($select))
-	  {
-	    if(!isset($_SESSION['ques_bank_id']))
-		 $_SESSION['ques_bank_id']=$qn['ques_bank_id'];
-		 
-	   $qbank++;
-	   $q_array[]=$qn['ques_id'];
-	  }
-	 $qcount=0;
-	 while($qcount!=$qbank)
-	  {
-	   $index=rand(1,5)-1;
-	   $error=0;
-	   for($i=0;$i<$qcount;$i++)
-	    {
-		 if($index==$tmp_array[$i])
-		 {
-		  $error=1;
-		  break;
-		 }
+	$qcount=0;
+	$selectq=mysql_query("select question_no from $ExamTableName");
+	$q_array=array();
+	while($question_nums=mysql_fetch_array($selectq))
+		{//var_dump( $question_nums);
+		$q_array[]=$question_nums['question_no'];
+		$qcount=$qcount+1;
 		}
-	   if(!$error)
-	    {
-		 $qno=$index+1;
-		 $_SESSION["q".$qno]=$q_array[$index];
-		 $tmp_array[$qcount]=$index;
-		 $qcount++;
-		}
-	  }
-	   $_SESSION['qcount']=$qbank;
-	   $_SESSION['cqno']=1;
-	   $_SESSION['cqn']=$_SESSION["q1"];
-	  }
-	  
-	 //foreach($_SESSION as $key => $value)
-	  //{
-	  // echo '<br />'.$key.' = '.$value;
-	  //}
+	if(!isset($_SESSION['cqno']))
+	 { 	
+		$_SESSION['qcount']=$qcount;
+	    $_SESSION['cqno']=1;
+	    $_SESSION['qlist']=$q_array;
+	 //   $_SESSION['cqn']=$_SESSION["q1"];
+	    $anstablename='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'];
 	 
-	 
+	   $anstablename=strtolower($anstablename);
+	     //var_dump($anstablename);
+	    $_SESSION['ansTable']=$anstablename;
+	    $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
+	    $ans_col_num=mysql_fetch_array(mysql_query($select));
+	    
+   	    if($qcount!=($ans_col_num[0]-1))
+   	    {
+   	    	 $i=$ans_col_num[0];
+   	    while($i<=$qcount){
+   	    	if($i==1)
+   	    		$colname_prev="rollnumber";
+   	    	else
+   	    		$colname_prev='Q'.($i-1);
+   	    	$colname='Q'.$i;
+   	    	//var_dump($colname,$colname_prev);
+   	    	//echo $anstablename;
+   	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
+   	   		$i=$i+1;
+   	   		}
+   	    }
 
-	 
+	}
+//var_dump($_SESSION['qlist']);
+if(	isset($_SESSION['qcount'])	)
 	 echo '<br />
 	 <div class="row-fluid"  >
 	    <div class="span9" style="text-align:justify;min-height:390px;padding:20px;border-radius:3px;border:1px solid #F5F5F5;box-shadow:0px 0px 5px 0px grey;" >';
+  /*
      if(isset($_POST['qn']))
 	  {
 	   //update_answers($_POST['ops']);
 	   
 	   $vals=explode("_",$_POST['qn']);
+	 //  echo $vals;
 	   $_SESSION['cqno']=$vals[1];
 	   $_SESSION['cqn']=$vals[0];
 	  }
+	  */
 	 if(isset($_POST['prev']))
 	  {
 	   if($_SESSION['cqno']>1)
 	    {
 		 //update_answers($_POST['ops']);
-		 
 	    $_SESSION['cqno']=$_SESSION['cqno']-1;
-	    $qno=$_SESSION['cqno'];
-	    $_SESSION['cqn']=$_SESSION["q".$qno];
+	//    var_dump($_SESSION['cqno']);
+	    $_SESSION['cqn']=$_SESSION["q".$_SESSION['qcount']];
 	    }
 	  }
 	  
 	 if(isset($_POST['next']))
 	  {
 	   if($_SESSION['cqno']<$_SESSION['qcount'])
-	    {
-		 //update_answers($_POST['ops']);
-		 
+	    {	 
 	    $_SESSION['cqno']=$_SESSION['cqno']+1;
-	    $qno=$_SESSION['cqno'];
-	    $_SESSION['cqn']=$_SESSION["q".$qno];
+	    $_SESSION['cqn']=$_SESSION["q".$_SESSION['qcount']];
 	    }
 	  }
 	 if(isset($_POST['answer']))
 	  {
-	   update_answers($_POST['ops']);
+	   update_answers($_POST['ops'],$_SESSION['ansTable'],$_SESSION['ansno']);
 	  }
 	  
-	   update_duration();
-	   $question=mysql_fetch_array(mysql_query("select * from question_bank where ques_id='$_SESSION[cqn]' and ques_bank_id=(select ques_bank_id from ques_bank_no where test_id='$_SESSION[tid]')"));
-	   $options=explode("|",$question['options']);
-	   
-	 echo '<div class="lead" >Q<span id="qno">'.$_SESSION['cqno'].'</span>) '.$question['ques'].'? <span class="text-info">';
-	 if(!$test['equal_weight'])
-	  echo '['.$question['marks'].' M]';
-	 else
+	  // update_duration();
+	   $QuestionTable=$_SESSION['course'].'_'.$_SESSION['examtype'];
+	   $q=$q_array[$_SESSION['cqno']-1];
+	   echo $q;
+	   $question=mysql_fetch_array(mysql_query("select * from $QuestionTable where que_no='$q' "));
+	   $i=3;
+	   $options=array();
+	   while ($i<=6) {
+	   	$opno='option'.$i;
+	  	$options[$i-3]=$question[$i];
+	  	$i=$i+1;
+	   }
+//	   var_dump($opno);
+	   echo '<br/>';
+	   //var_dump($options);
+	   echo '<div class="lead" >Q<span id="qno">'.$_SESSION['cqno'].'</span>) '.$question['question'].'? <span class="text-info">';
+	 if(!$test['marks'])
 	  {
-	   $marks=$test['max_marks']/$_SESSION['qcount'];
-	   echo '['.$marks.' M]';
+	  	$quemarks="select marks from $_SESSION[ExamTableName] where question_no='$_SESSION[cqno]'";
+	  	$test['marks']=mysql_fetch_array(mysql_query($quemarks));
 	  }
+
 	 echo '</span>';
+	 /*
      if($test['neg_marking'])
       echo ' <span class="text-error">['.$question['neg_marks'].' M]</span>';
 	 echo '</div>';
-	 $answers=mysql_fetch_array(mysql_query("select ans from answers where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' and ques_id='$_SESSION[cqn]' "));
+	 */
+	 $ansno='Q'.$_SESSION['cqno'];
+	 $andTable='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'];
+	 $ans1="select $ansno from $ansTable";
+	 $_SESSION['ansno']=$ansno;
+	 $answers=mysql_fetch_array(mysql_query("$ans1"));
      $ops=explode("|",$answers['ans']);
 	 //echo $answers['ans'];
-	 echo '<div class="row-fluid " ><div class="span6 lead"><form action="student.php" method="post" >
+	 echo '<div class="row-fluid " ><div class="span6 lead"><form action="exam.php" method="post" >
 	 <input type="checkbox"  name="ops[]" id="op2"  value="A" ';
 	 foreach($ops as $key =>$value)
 	  {
 	   if($value=="A")
 	    {
-		 echo ' checked';
+		 echo 'checked';
 		 break;
 		}
 	  }
@@ -253,28 +251,7 @@ echo '</div>';
 	  }
 
 	 echo '/>&nbsp; D) <span id="op4t">'.$options[3].'</span> </div>';
-	 
-	 if($question['if_image'])
-	  {
-	 echo '<div class="span5 offset1" >';
-	 echo '<a href="#myModalimg" data-toggle="modal" class="thumbnail"><img src="img/qns/'.$_SESSION['course'].'_'.$_SESSION['ques_bank_id'].'_'.$_SESSION['tid'].'_'.$question['ques_id'].'.'.$question['if_image'].'"  style="height:200px;"  /></a>';
-?>
 
-<div id="myModalimg" class="modal hide fade" style="width:80%;margin-left:-550px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-<h3 id="myModalLabel">Question Image</h3>
-</div>
-<div class="modal-body text-center">
-<?php echo '<img src="img/qns/'.$_SESSION['course'].'_'.$_SESSION['ques_bank_id'].'_'.$_SESSION['tid'].'_'.$question['ques_id'].'.'.$question['if_image'].'"  style="height:100%;" />'; ?>
-<br /><br />
-</div>
-<div class="modal-footer">
-<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-</div>
-</div>
-
-<?php
 	 echo '</div>';
 	 }
 	 echo '</div>';
@@ -287,88 +264,22 @@ echo '</div>';
 	 if($_SESSION['cqno']==1)
 	  echo ' class="btn btn-large btn-danger"  disabled';
 	 else
-	  echo ' class="btn btn-info btn-large" ';
+	 echo ' class="btn btn-info btn-large" ';
 	 echo '/><i class="icon-white icon-arrow-left"></i>Prev</button></div>
 	 <div class="span4" style="text-align:center;"><button type="submit" id="answer"name="answer" class="btn btn-large btn-success" ><i class="icon-white icon-ok"></i>Answer</button></div>
-	 <div class="span4" style="text-align:right;"><button type="submit" id="next"name="next" ';
+	 <div class="span4" style="text-align:right;"><button type="submit" id="next" name="next" ';
 	 if($_SESSION['cqno']==$_SESSION['qcount'])
 	  echo ' class="btn btn-large btn-danger"  disabled';
 	 else
 	  echo ' class="btn btn-info btn-large" ';
-	 echo '>Next <i class="icon-white icon-arrow-right"></i></button></div>
+	  echo '>Next <i class="icon-white icon-arrow-right"></i></button></div>
 	 </div>';
-	  }
-	
-
-	 echo '</div>';
-	 echo '<div class="span3" style="padding:20px;min-height:390px;border-radius:3px;border:1px solid #F5F5F5;box-shadow:0px 0px 5px 0px grey;" >';
-	 echo '<table align=center >';
-	 //$qbank=30;
-	 for($i=1;$i<=$_SESSION['qcount'];$i++)
-	  {
-	   if($i%4==1)
-	    echo '<tr>';
-	   $qid=$_SESSION["q".$i];
-	   echo '<td class="qn" ><button type="submit" name="qn" value="'.$qid.'_'.$i.'"        class="btn btn-primary btn-large ';
-	   $ans=mysql_fetch_array(mysql_query("select ans from answers where  rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' and ques_id='$qid' "));
-	   if($ans['ans'])
-	    echo ' btn-success';
-	   else
-	    echo ' btn-danger';
-	   echo '" />'.$i.'</button></td>';
-	   if($i%4==0)
-	    echo '</tr>';
-	  }
-	 echo '</table>';
-	 echo '<br /><table>';
-	 echo '<tr><td><div class="ans" ></div></td><td class="span6" style="text-align:left;" >&nbsp;&nbsp;Answered</td><td><div class="nans" ></td><td class="span6" style="text-align:left;"></div>&nbsp;&nbsp;Not Answered</td></tr>';
-	 echo '</table>';
-	 echo '</div>';
 	 echo '<div class="row">';
 	 echo '<div class="span4 offset4"><br /><button class="btn btn-primary btn-large btn-block" name="complete" ><i class="icon-white icon-flag" ></i> Test Completed</button></span></div>';
-	 echo '</div></form>';
-	 
-   }
-
-
-  }
- }
-/*  
- if(!isset($_SESSION['course']))
-  {
-   if(!isset($_SESSION['complete']))
-    {
- echo '<br /><br /><br /><p class="lead" ><big>Select the Course</big></p>';
-
- $select=mysql_query("select course_id from enroll where rollnumber='$_SESSION[rollnumber]' ");
- echo '<form action="student.php" method="post" ><select name="course">';
- while($row=mysql_fetch_array($select))
-  {
-    echo '<option value='.$row['course_id'].'>'.$row['course_id'].'</option> ';
-  }
- echo '</select>';
-
-
- echo '<br /><br /><button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Take Exam</button>';
- echo '</form>';
-    }
-   else
-    {
-	 update_duration();
-     echo '<div class="row-fluid" ><br /><br /><br /><br /><br /><br /><br /><i class="icon-thumbs-up" ></i> <h1 class="text-success" >Test Completed!!!</h1></div>';
-	}
-  }
- 
-
- //echo '</div>';
- */
-}
-else
-{
- //echo '<script>window.location="index.php";</script>';
-}
-
-
-
+	 echo '</div>';
+	  }
+  
+ }}
+ echo '</div>';
 include("footer.php");
 ?>
