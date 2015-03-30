@@ -229,7 +229,7 @@ else if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 			</table>
 			</form>
 			<div class="row-fluid text-center">
-			<a href="fac_ques.php" class="btn btn-primary btn-large" ><i class="icon-white icon-chevron-left" ></i> Go Back</a>
+			<a href="faculty.php" class="btn btn-primary btn-large" ><i class="icon-white icon-chevron-left" ></i> Go Back</a>
 			</div>
 		<?php	
 	}

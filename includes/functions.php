@@ -290,7 +290,7 @@ function fetch_questions($c,$d)
     	$selected_exam_details=explode('_',$d);
     	$dt=explode('-',$selected_exam_details[0]);
     	$table_name=$c."_".$selected_exam_details[1]."_".find_semester(find_sem($dt[1]))."_".$dt[0];
-    	echo "Table name : ".$table_name;
+    	//echo "Table name : ".$table_name;
 		$_SESSION['ques_bank_id']=$table_name;
     }
   else
@@ -387,7 +387,7 @@ if($_POST['qadd'])
 		$test=mysql_fetch_array(mysql_query("select * from test where course_id='$_SESSION[course]' and examtype=$selected_exam_details[1] and  date='$selected_exam_details[0]' "));
 		?>
         <div class="text-left" >
-        <form action="fac_ques.php" method="post"><button type="submit" class="btn btn-primary text-right" name="goback" value="goback" ><i class="icon-white icon-chevron-left" ></i> Go Back</button></form></div><br />
+        <form action="faculty.php" method="post"><button type="submit" class="btn btn-primary text-right" name="goback" value="goback" ><i class="icon-white icon-chevron-left" ></i> Go Back</button></form></div><br />
 		<table align="center" class="table table-striped table-hover table-bordered" >
 			<tr class="qns" >
 				<th>#</th>
