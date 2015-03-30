@@ -37,50 +37,50 @@ if($_GET['step']==1)
  ////second step in series of setting exam to get details of question paper like max marks,questions count etc.
 if($_GET['step']==2)
  {
-  if($_GET['exam'])
+  if($_GET['exam'] && $_GET['duration'] && $_GET['exp_date'])
    {
     //echo $_GET['exam'];  -->correct
 		//echo $_GET[duration];
 		//echo $_GET[exp_date];
 		
-		if(!validateDate($_GET[exp_date]))/// check if vali date has entered
+		if(!validateDate($_GET['exp_date']))/// check if vali date has entered
 		{
       //echo "ss1";
-		unset($_GET[exp_date]);
+		unset($_GET['exp_date']);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
 		$_SESSION['step']=1;
 		}
-		if(!validateTime($_GET[duration]))//check if valid time has been entered
+		if(!validateTime($_GET['duration']))//check if valid time has been entered
 		{
-      echo "ss2";
-		unset($_GET[duration]);
+      //echo "ss2";
+		unset($_GET['duration']);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid duration!</div>';
 		$_SESSION['step']=1;
 		}
 		else
 		{
-		if(isset($_GET[duration]))
+		if(isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
 		{
-      //echo $_SESSION[course]." ".$_GET[exam]." ".$_GET[exp_date];
+      //echo $_SESSION['course']." ".$_GET['exam']." ".$_GET['exp_date'];
 		  $_SESSION['exam']=$_GET['exam'];
       $_SESSION['date']=$_GET['exp_date'];
       $check=mysql_query("select course_id from test where course_id='$_SESSION[course]' and examtype=$_GET[exam] and date='$_GET[exp_date]' ");
       $row=mysql_fetch_array($check);
-      $ndate=explode('-',$_GET[exp_date]);
+      $ndate=explode('-',$_GET['exp_date']);
       if($ndate[1]>=1 && $ndate[1]<=6)
           $sem=2;
       else if($ndate[1]>=7 && $ndate[1]<=12)
           $sem=1;
-      if($row=="")
+      if($row=="" && isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
       {
         //echo "  ss4  ";
-        echo $sem."i";
+        //echo $sem."i";
         mysql_query("insert into test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]',max_marks='$_GET[max_marks]',step='$_SESSION[step]',semester='$sem' ");
 	  	}
       else
       {
-        // echo " ss5 ";
-        echo $sem."u";
+       //echo " ss5 ";
+        //echo $sem."u";
         mysql_query("update test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', semester='$sem' where course_id='$_SESSION[course]' and examtype='$_GET[exam]' and date='$_GET[exp_date]' ");
       }
     }
@@ -171,8 +171,6 @@ echo '</div>';
    else if($_SESSION['exam']==3)
     echo '<span class="text-success" > Mid sem </span>';
    else if($_SESSION['exam']==4)
-    echo '<span class="text-success" > Viva </span>';
-   else if($_SESSION['exam']==5)
     echo '<span class="text-success" > End sem </span>';
    else
     echo '<span class="text-error">not set</span>';
@@ -204,8 +202,7 @@ if($_SESSION['step']==1)
   <option value="1" <?php if($test['type']==1) echo "selected"; ?> >Q1</option>
   <option value="2" <?php if($test['type']==2) echo "selected"; ?> >Q2</option>
   <option value="3" <?php if($test['type']==3) echo "selected"; ?> >MidSem</option>
-  <option value="4" <?php if($test['type']==4) echo "selected"; ?> >Viva</option>
-  <option value="5" <?php if($test['type']==5) echo "selected"; ?> >EndSem</option>
+  <option value="4" <?php if($test['type']==4) echo "selected"; ?> >EndSem</option>
   </select>
   </div>
   </div>
@@ -259,7 +256,7 @@ if($_SESSION['step']==2)
   
   <?php
     //echo $_SESSION['course'].;
-    display_test_info($_SESSION['course'],$_GET[exam],$_GET[exp_date]);
+    display_test_info($_SESSION['course']."_".$_GET['exam']."_".$_GET['exp_date']);
   ?>
   <p><br />Click <span class="text-success" >Finish</span> to add questions or <span class="text-error" >Back</span> making changes to it.<br /><br /></p>
   <form action="set_questions.php" method="post">

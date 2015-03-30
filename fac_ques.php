@@ -12,109 +12,189 @@ if($_SESSION['tab']!=7)
 require("header.php");
 
 
+if(isset($_POST['selected_exam']) && isset($_POST['go']))
+{
+	//echo $_POST['selected_exam'];
+	$_SESSION['selected_exam']=$_POST['selected_exam'];
+}
 
-if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
+if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_SESSION['date'])))
+{
+	//echo "I see u..";
+	$all_dates=mysql_query("select date,examtype from test where course_id='$_SESSION[course]' ");
+	//while($new=mysql_fetch_array($all_dates))
+	//	echo $new['date']."  and  ";
+	?>	
+	<div class="row-fluid text-center">
+	<br><br>
+	<h3>Select Date </h3>
+	<form method="POST" action="fac_ques.php">
+		<select name="selected_exam">
+		<?php while($date=mysql_fetch_array($all_dates))// && var_dump(validatedate($date['date']) ))
+		{
+		?>
+		<option value="<?php echo $date['date']."_".find_examtype($date['examtype']) ?>"><?php echo $date['date']." ".find_examtype($date['examtype']) ?></option>
+		<?php
+		}
+		mysql_free_result($date_set);
+		?>
+		</select>
+		<p></p>
+		<button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Submit </button>
+		</form>
+	</div>
+<?php
+}
+else if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
  {
+ 	
+ 	//echo $_SESSION['selected_exam'];
  	////////////To make all data default if reached from finish in set_questions.php
  	$check=mysql_fetch_array(mysql_query("select step from test where examtype='$_SESSION[exam]' and course_id='$_SESSION[course]' and date='$_SESSION[date]' "));
  	//echo "if i m here".$check[step]."need help";
- 	if($check['step']==4)
+ 	if($check['step']==4 && isset($_SESSION['exam']) && isset($_SESSION['date']))
  	{
- 		echo "i reached here";
+ 		$_SESSION['selected_exam']=$_SESSION['date']."_".find_examtype($_SESSION['exam']);
+ 		//echo "i reached here";
+ 		$exmtyp=find_examtype($_SESSION['exam']);
+ 		//echo $exmtyp;
+ 		$checksem=mysql_fetch_array(mysql_query("select semester from test where examtype='$_SESSION[exam]' and course_id='$_SESSION[course]' and date='$_SESSION[date]' "));
+ 		$sem=find_semester($checksem['semester']);
+ 		$ndate=explode('-',$_SESSION['date']);
+ 		$currentcoursetable=$_SESSION['course']."_".$exmtyp."_".$sem."_".$ndate[0];
+ 		$_SESSION['ctTable']=$currentcoursetable;
+ 		//echo "Here the table name is = ".$currentcoursetable;   //-->> Correct till here
+ 		$checkcourseDB=mysql_query("SHOW TABLES LIKE '".$_SESSION['course']."_".$exmtyp."' ");
+ 		$ctDB=mysql_num_rows($checkcourseDB);
+ 		$masterDB=$_SESSION['course']."_".$exmtyp;
+ 		if($ctDB=="0")
+ 		{	
+ 			////////////Creating Dynamic table for master question bank of the course if not exists/////////////
+ 			mysql_query("create table $masterDB(que_no INT(5),question VARCHAR(200),answer char(1),option1 varchar(20),option2 varchar(20),option3 varchar(20),option4 varchar(20),primary key (que_no)); ") or die (mysql_error());
+ 		}
+ 		$ctTable=mysql_num_rows(mysql_query("SHOW TABLES LIKE '".$currentcoursetable."' "));
+ 		if($ctTable==0)
+ 		{
+ 			/////////////////Creating table for exam if doesn't exists/////////
+	 		mysql_query("create table $currentcoursetable(question_no INT(5),neg_marking INT(1),marks INT(2),primary key(question_no),foreign key (question_no) references $masterDB(que_no)); ") or die (mysql_error());
+ 		}
  		unset($_SESSION['exam']);
 		unset($_SESSION['date']);
 		unset($_SESSION['step']);
  	}
+
   	if(isset($_POST['delete']) || isset($_POST['edit']) || isset($_POST['add']) || isset($_POST['change']))
    	{
-   		$max=mysql_fetch_array(mysql_query("select max(ques_id) as max from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' "));
-    	$qno=$max['max']+1;
+   		//echo "Here";
+   		$exam_details=explode("_", $_SESSION['selected_exam']);
+   		$masterDB=$_SESSION['course']."_".$exam_details[1];
+   		$max=mysql_fetch_array(mysql_query("select que_no from $masterDB order by que_no desc"));
+   		//echo "HERE".$max['que_no']."select * from $masterDB "."ends";
+   		if(!isset($max['que_no']))
+   			$qno=1;
+   		else
+	    	$qno=$max['que_no']+1;
+	    //echo "Here";
 		if(isset($_POST['add']))
 		{
-		$m=mysql_fetch_array(mysql_query("select max_qns as m from tests where test_id='$_SESSION[tid]' "));
-        if($qno>$m['m'])
-        {
-        	echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Max Question limit reached</div>';
-        }
-        else
-        {
-		    //echo "hello";
-			//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
-			$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
-			//echo "File: ".$_FILES["file"]["name"][0];
-			if($_FILES["file"]["name"])
-			{
-			  	//echo "hai";
-			  	$allowedExts = array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG");
-	          	$extension = end(explode(".", $_FILES["file"]["name"]));
-			   	if ((($_FILES["file"]["type"] == "image/gif")|| ($_FILES["file"]["type"] == "image/jpeg")|| ($_FILES["file"]["type"] == "image/jpg")|| ($_FILES["file"]["type"] == "image/png"))&& ($_FILES["file"]["size"] < 3000000 )&& in_array($extension, $allowedExts))
-			    {
-	                if ($_FILES["file"]["error"] > 0 )
-	                {
-	                  	echo "Some Unexpected Error. Try Again.. ";
-	                }
-	              	else
-	                { 
-					    $file_success=1;
-						//echo "fine";
+			$exmno=find_number($exam_details[1]);
+			$max_marks=mysql_fetch_array(mysql_query("select max_marks from test where course_id='$_SESSION[course]' and examtype=$exmno and date='$exam_details[0]' "));
+			$m=mysql_fetch_array(mysql_query("select sum(marks) as m from $_SESSION[ques_bank_id]"));
+			if(!isset($m['m']))
+				$m['m']=0;
+	        //echo "HERE"."select max_marks from test where course_id='$_SESSION[course]' and examtype=$exmno and date='$exam_details[0]' "."ends";//---------->correct
+	        //echo $m['m'];
+	        if($max_marks['max_marks']<($m['m']+$_POST['marks']))
+	        {
+	        	echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Max Marks Limit reached</div>';
+	        	$qmarks=$max_marks['max_marks']-$m['m'];
+	        }
+	        else
+	        {
+	        	$qmarks=$_POST['marks'];
+	        }
+			    //echo "hello";
+				//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
+				//$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
+				//echo "File: ".$_FILES["file"]["name"][0];
+				if($_FILES["file"]["name"])
+				{
+				  	//echo "hai";
+				  	$allowedExts = array("jpg", "jpeg", "gif", "png", "JPG", "JPEG", "GIF", "PNG");
+		          	$extension = end(explode(".", $_FILES["file"]["name"]));
+				   	if ((($_FILES["file"]["type"] == "image/gif")|| ($_FILES["file"]["type"] == "image/jpeg")|| ($_FILES["file"]["type"] == "image/jpg")|| ($_FILES["file"]["type"] == "image/png"))&& ($_FILES["file"]["size"] < 3000000 )&& in_array($extension, $allowedExts))
+				    {
+		                if ($_FILES["file"]["error"] > 0 )
+		                {
+		                  	echo "Some Unexpected Error. Try Again.. ";
+		                }
+		              	else
+		                { 
+						    $file_success=1;
+							//echo "fine";
+				        }
 			        }
-		        }
-			   else
-			    {
-			       echo "file is not within range/ unsupported format";
-			    }
-			}
-			else
-			{
-			 	 $extension=0;
-			}
-		    
-		    if($_POST['qtype']=="Single")
-			 	$type=0;
-			else
-			 	$type=1;
-			 
-			//list of questions 
-			$no_repeat=mysql_num_rows(mysql_query("select ques_id from question_bank where ques_bank_id='$_SESSION[ques_bank_id]' and ques='$_POST[ques]' "));
+				   else
+				    {
+				       echo "file is not within range/ unsupported format";
+				    }
+				}
+				else
+				{
+				 	 $extension=0;
+				}
+				 
+				//list of questions 
+				$no_repeat=mysql_num_rows(mysql_query("select ques_no from $masterDB where ques='$_POST[ques]' "));
+				
+			    if(!(isset($no_repeat)) and $qmarks!=0)
+				{
+				 	//echo "hi";
+					$query_t= mysql_query("INSERT INTO $masterDB VALUES ('$qno','$_POST[ques]','$_POST[ans]', '$_POST[op1]', '$_POST[op2]', '$_POST[op3]', '$_POST[op4]')") or die("Died2".mysql_error());
+					$query_t1=mysql_query("insert into $_SESSION[ques_bank_id] VALUES ('$qno','$_POST[neg_marks]','$qmarks') ");
+					/////echo "HERE"."insert into $_SESSION[ques_bank_id] VALUES ('$qno','$_POST[neg_marks]','$qmarks') "."ends";---------->correct
+					if($file_success)
+				 	{
+						if(file_exists($_SESSION["course"]."_".$qno.".".$extension))
+					 		unlink($_SESSION["course"]."_".$qno.".".$extension);
+		            	move_uploaded_file($_FILES["file"]["tmp_name"],"img/qns/".$_SESSION["course"]."_".$qno.".".$extension);
+				 	}
+		        	echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question  added!</div>';
+					$_SESSION['ques_id']=$qno;
+				}
+				else
+				{
+					echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>No more questions can be added!!! </strong></div>';
+				}
 			
-		    if(!$no_repeat)
-			{
-			 	//echo "hi";
-				$query_t= mysql_query("INSERT INTO question_bank VALUES ('$qno','$_SESSION[ques_bank_id]','$_POST[ques]','$_POST[ans]','$_POST[marks]', '$op', '$type','$extension', '$_POST[neg_marks]' )") or die("Died2".mysql_error());
-				if($file_success)
-			 	{
-					if(file_exists($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension))
-				 		unlink($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
-	            	move_uploaded_file($_FILES["file"]["tmp_name"],"img/qns/".$_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$extension);
-			 	}
-	        	echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$qno.' added!</div>';
-				$_SESSION['ques_id']=$qno;
-			}
+		//echo '<script>window.location="fac_ques.php";</script>';
 		}
-		//echo '<script>window.location="fac_ques.php";</script>';
-	}
-	else if(isset($_POST['delete']))// deleting a questions from database 
-	{
-	    //echo 'hi';
-		//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
-		$qns=mysql_fetch_array(mysql_query("select if_image from question_bank where ques_id='$qno' "));
-	    if(file_exists($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$qns['if_image']))
-		  unlink($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$qns['if_image']);		
-		$query_t= mysql_query("DELETE FROM question_bank WHERE ques_id = '$_POST[qno]' and ques_bank_id='$_SESSION[ques_bank_id]' ") or die("Died2".mysql_error());
-        echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question no:'.$_POST[qno].' deleted!</div>';
-		//echo '<script>window.location="fac_ques.php";</script>';
-	}
-	else if(isset($_POST['edit']) || isset($_POST['change'])) //  editing a present question
-	{
-		if(isset($_POST['edit']))
+		else if(isset($_POST['delete']))// deleting a questions from database 
 		{
-		   questions_header();
+		    //echo 'hi';
 			//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
-			$query_ed= mysql_query("SELECT * FROM question_bank WHERE ques_id = '$_POST[serial]' and ques_bank_id='$_SESSION[ques_bank_id]' ") or die("Died2".mysql_error());
-			$ques = mysql_fetch_array($query_ed);
-			$options = $ques['options'];
-			$opts = explode("|",$options);
-			$test=mysql_fetch_array(mysql_query("select * from tests where test_id='$_SESSION[tid]' "));
+			$qns=mysql_fetch_array(mysql_query("select if_image from question_bank where ques_id='$qno' "));
+		    if(file_exists($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$qns['if_image']))
+			  unlink($_SESSION["course"]."_".$_SESSION['ques_bank_id']."_".$_SESSION['tid']."_".$qno.".".$qns['if_image']);
+			$ques_no=mysql_fetch_array(mysql_query("select que_no from $masterDB where question='$_POST[ques]' "));
+			//echo $_POST['ques']."HERE"."select que_no from $masterDB where question='$_POST[ques]' "."ends";
+			$query_t= mysql_query("DELETE FROM $_SESSION[ques_bank_id] WHERE question_no=$ques_no[que_no] " ) or die("Died2".mysql_error());
+	        echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Question deleted!</div>';
+			//echo '<script>window.location="fac_ques.php";</script>';
+		}
+		else if(isset($_POST['edit']) || isset($_POST['change'])) //  editing a present question
+		{
+			if(isset($_POST['edit']))
+			{
+		   	questions_header();
+			//$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
+			$ques_ed= mysql_query("SELECT * FROM $masterDB WHERE que_no=$_POST[quesno] ") or die("Died2".mysql_error());
+			$ques = mysql_fetch_array($ques_ed);
+			$mark_details=mysql_fetch_array(mysql_query("select * from $_SESSION[ques_bank_id] where question_no=$ques[que_no] "));
+			//////echo "HERE".$ques['que_no']."SELECT * FROM $masterDB WHERE que_no=$_POST[quesno] "."ends";----------------->> correct
+			//$options = $ques['options'];
+			//$opts = explode("|",$options);
+			//$test=mysql_fetch_array(mysql_query("select * from tests where test_id='$_SESSION[tid]' "));
 			
 			?>
 			<form method="POST" action="fac_ques.php" enctype="multipart/form-data" >
@@ -125,61 +205,26 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 				<th>Options</th>
 				<th>Answer</th>
 				<?php
-                 if(!$test || !$test['equal_weight'])		
-                  echo '<th>Marks</th>';
-                 if(!$test || $test['neg_marking'])
-                  echo '<th>-ve Marks</th>';				 
+                 echo '<th>Marks</th>';
+                 echo '<th>-ve Marks</th>';				 
 				?>
 				<!-- Table showing the questions to entered and questions to be selected-->
-				<th>Q-Type</th>
-				<th>Image</th>
-				<th>Operation</th>
 			</tr>
 				<tr>
-					<td><?php echo $ques['ques_id'];?></td>
-					<td ><textarea   rows="1" name="ques" style="min-width:300px;min-height:140px;" required><?php echo $ques['ques'];?></textarea></td>			
+					<td name="que_no" value=<?php echo $ques['que_no'];?> >1</td>
+					<td ><textarea   rows="1" name="ques" style="min-width:300px;min-height:140px;" required><?php echo $ques['question'];?></textarea></td>			
 						<td>
-                         <input type="text" class="input-small" name="op1" value="<?php echo $opts[0];?>" required/><br /><input  class="input-small" type="text" name="op2" value="<?php echo $opts[1];?>" required/><br /><input  class="input-small" type="text" name="op3" value="<?php echo $opts[2];?>" required/><br /><input  class="input-small" type="text" name="op4" value="<?php echo $opts[3];?>" required/>
+                         <input type="text" class="input-small" name="op1" value="<?php echo $ques['option1'];?>" required/><br /><input  class="input-small" type="text" name="op2" value="<?php echo $ques['option2'];?>" required/><br /><input  class="input-small" type="text" name="op3" value="<?php echo $ques['option3'];?>" required/><br /><input  class="input-small" type="text" name="op4" value="<?php echo $ques['option4'];?>" required/>
 						 </td>
-					<td><input type="text" class="input-small"  maxlength="7" style="width:60px;" name="ans" placeholder="(Ex:A|B)" value="<?php echo $ques['ans'];?>" required/></td>
-					<?php
-					 if(!$test || !$test['equal_weight'])
-					  {
-					 ?>
-					  <td><input type="number" name="marks"  class="input" style="width:30px;" value="<?php echo $ques['marks'];?>" required/></td>
-					<?php 
-					  } 
-					?>
-					<?php
-					 if(!$test || $test['neg_marking'])
-					  {
-					 ?>
-					  <td><input type="number" name="neg_marks"  class="input" style="width:30px;" value="<?php echo $ques['neg_marks'];?>" required/></td>
-					<?php 
-					  }
-					?>
-					<td><select name="qtype" class="input-small" ><option value="Single" <?php if($ques['qtype']==0) echo "selected"; ?> >Single</option><option value="Multiple"  <?php if($ques['qtype']==1) echo "selected"; ?> >Multiple</option></select></td>
-					<td>
+					<td><input type="text" class="input-small"  maxlength="7" style="width:60px;" name="ans" placeholder="(Ex:A|B)" value="<?php echo $ques['answer'];?>" required/></td>
 					
-					<?php if($ques['if_image']) echo '<a href="#myModal'.$ques['ques_id'].'" role="button" class="btn btn-primary" data-toggle="modal"  ><i class="icon-white icon-eye-open" ></i> View</a>
-                   <div id="myModal'.$ques['ques_id'].'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                   <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                   <h3 id="myModalLabel">Image for Question: '.$ques['ques_id'].'</h3>
-                   </div>
-                   <div class="modal-body">
-                   <a href="#" class="thumbnail" ><img src="img/qns/'.$_SESSION['course'].'_'.$_SESSION['ques_bank_id']."_".$_SESSION['tid'].'_'.$ques['ques_id'].'.'.$ques['if_image'].'" style="width:50%;height:50%;" /></a>
-                   </div>
-                   <div class="modal-footer">
-                   <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                   </div>
-                   </div>
-					';
-				   else 
-				     echo "no"; ?>
+					  <td><input type="number" name="marks"  class="input" style="width:30px;" value="<?php echo $mark_details['marks'];?>" required/></td>
+					
+					  <td><input type="number" name="neg_marks"  class="input" style="width:30px;" value="<?php echo $mark_details['neg_marking'];?>" required/></td>
+					
+					
 				  <br /><br />
-				  <input type="file" class="input-small" name="file" style="width:200px;" ><br /><span class="help-inline">(leave un-uploaded to remove the image)</span></td>
-					<td><button type="submit" class="btn btn-warning btn-large" name="change" value="Update" ><i class="icon-white icon-ok" ></i> Update</button><input type="hidden" value="<?php echo $ques['ques_id']; ?>" name="serial" />
+					<td><button type="submit" class="btn btn-warning btn-large" name="change" value="Update" ><i class="icon-white icon-ok" ></i> Update</button><input type="hidden" value="<?php echo $ques['que_no']; ?>" name="quesno" />
 					</tr>
 			</table>
 			</form>
@@ -187,13 +232,12 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 			<a href="fac_ques.php" class="btn btn-primary btn-large" ><i class="icon-white icon-chevron-left" ></i> Go Back</a>
 			</div>
 		<?php	
-		}
+	}
 	else
 	{
-		echo "here";
-	    $qno=$_POST['serial'];
+		//echo "here";
+	    $qno=$_POST['quesno'];
 //$t_id = get_test_id($_SESSION['course_id'],$_SESSION['test']);
-		$op = $_POST['op1']."|".$_POST['op2']."|".$_POST['op3']."|".$_POST['op4'];
 		//echo "File: ".$_FILES["file"]["name"][0];
 		if($_FILES["file"]["name"])
 		 {
@@ -220,14 +264,10 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
 		else
 		 {
 		  $extension=0;
-		 }
-	    if($_POST['qtype']=="Single")
-		 $type=0;
-		else
-		 $type=1;
-		 
-		$query_t= mysql_query("update question_bank set ques='$_POST[ques]', ans='$_POST[ans]', marks='$_POST[marks]', options='$op', qtype='$type', if_image='$extension', neg_marks='$_POST[neg_marks]'  where ques_id='$qno'  and ques_bank_id='$_SESSION[ques_bank_id]' ") or die("Died2".mysql_error());
-		
+		 } 
+		 //echo "HERE".$qno;
+		$query_t= mysql_query("update $masterDB set question='$_POST[ques]', answer='$_POST[ans]', option1='$_POST[op1]', option2='$_POST[op2]', option3='$_POST[op3]', option4='$_POST[op4]' where que_no=$qno ") or die("Died2".mysql_error());
+		$query_currentDB=mysql_query("update $_SESSION[ques_bank_id] set marks=$_POST[marks],neg_marking=$_POST[neg_marks] where question_no=$qno ");
 		//Showing/verifying the added external files in the question
 		
 		if($file_success)
@@ -242,7 +282,8 @@ if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
   }//end of if
      if(!$_POST['edit'])
 	 {
-	  fetch_questions($_SESSION['course'],$_SESSION['tid']);
+	 	//echo "It's Here".$_SESSION['selected_exam'];
+	  fetch_questions($_SESSION['course'],$_SESSION['selected_exam']);
 	 }
 }//end of if
 else

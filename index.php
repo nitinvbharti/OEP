@@ -10,8 +10,8 @@ if($_POST['logout'])
   	if(isset($_SESSION['rollnumber']))
   		{
   		$dt = new DateTime();
-       $dtformatted=$dt->format('Y-m-d H:i:s');
-       mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+        $dtformatted=$dt->format('Y-m-d H:i:s');
+        mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
   		}
     session_destroy();
 	if(isset($_COOKIE["rollnumber"]))
@@ -48,15 +48,19 @@ if(isset($_POST['login']))
        if($check[1]=='1')
        	{
        		unset($_SESSION['rollnumber']);
-       		$_SESSION['multilogin']='1';
+       		$multilogin='1';
+       		//$_SESSION['multilogin']='1';
+
        	}
        elseif($check[1]=='0')
        		{mysql_query("UPDATE login set loggedin='1',lastlogin='$dtformatted' where rollnumber='$_SESSION[rollnumber]'");
    	   		//echo $dtformatted;
+       		$multilogin='0';
    	   		}
    	   else
-       		mysql_query("INSERT INTO login set rollnumber='$_SESSION[rollnumber]',loggedin='1',lastlogin='$dtformatted'");
-
+       		{mysql_query("INSERT INTO login set rollnumber='$_SESSION[rollnumber]',loggedin='1',lastlogin='$dtformatted'");
+       		$multilogin='0';
+       		}
    }
   else
    {///////////////////////checking for login credentials of faculty//////////////////////////////////
@@ -150,7 +154,7 @@ else
 /////////////////form to fill the login data --end///////////////////////
 if(!isset($_SESSION['rollnumber']) && !isset($_SESSION['faculty_id']) && isset($_POST['login']))
  {
- 	if(isset($_SESSION['multilogin']))
+ 	if($multilogin=='1')
  		{
  			echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Multiple Login Not Allowed</div>';
 		}

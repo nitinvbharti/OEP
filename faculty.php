@@ -7,8 +7,10 @@ session_start();
 if($_SESSION['tab']!=1)
 {
  $_SESSION['tab']=1;
+unset($_SESSION['selected_exam']);
  //echo '<meta http-equiv="refresh" content="0;faculty.php" >';
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 require("header.php");
 ///\\\\\\\\\\\\\\\\\\\\\\checking credentials\\\\\\\\\\\\\\\\\\\\

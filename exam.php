@@ -3,9 +3,11 @@ session_start();
 require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
- echo '<div class="row-fluid text-center id=clock">';
-echo(" Current Time:"); 
-//echo '<div id=clock>';
+echo '<div class="row-fluid text-center ">';
+/*
+echo '<div class="row"';
+//echo " Current Time:"; 
+echo '<div class="span4 offset4"><span class="lead" id="clock">&nbsp;&nbsp;&nbsp;Current Time: </span>';
 echo '<script>
 var myVar=setInterval(function(){myTimer()},1000);
 myVar.style.color = "Red";
@@ -16,13 +18,32 @@ function myTimer() {
     document.getElementById("clock").innerHTML = d.toLocaleTimeString();
     
 }
-</script>';
-echo '</div>';
+</script>;';
+echo '</div></div>';*/
 if($_POST['logout'])
   {
   		$dt = new DateTime();
        $dtformatted=$dt->format('Y-m-d H:i:s');
   	 mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+  	/* echo '<script>window.onbeforeunload = function (event) {
+    var message = "Important: Please click on \"Save\"button to leave this page.";
+    if (typeof event == "undefined") {
+        event = window.event;
+    }
+    if (event) {
+        event.returnValue = message;
+    }
+    return message;
+};
+
+$(function () {
+    $("a").not("#lnkLogOut").click(function () {
+        window.onbeforeunload = null;
+    });
+    $(".btn").click(function () {
+        window.onbeforeunload = null;
+});
+});</script>';*/
   	/*if(isset($_SESSION['rollnumber']))
   		{
   		$dt = new DateTime();
@@ -44,25 +65,21 @@ if($_POST['logout'])
   }
 
 $exam=$_SESSION['examtype'].'_'.'taken';
-//echo $exam;
 if(isset($_POST['complete']) || isset($_SESSION['complete']))
  {
   $_SESSION['complete']=1;
   $val=mysql_query("update student_exam_status set $exam=1 where rollnumber='$_SESSION[rollnumber]'and course_id='$_SESSION[course]' ");
  //var_dump($val);
-  unset($_SESSION['course']);
+  
   unset($_SESSION['rollnumber']);
   echo "<div class='row'>";
   echo '<div class="span12 text-center">';
-  echo '<span class="lead" >Congrats you have successfully Completed The test</span>';
+  echo '<span class="lead" >Congrats you have successfully'.$_SESSION['course'].'Completed The test</span>';
   unset($_SESSION['course']);
   echo '</div></div>';
- echo '<script>
-window.location="index.php";
-}
-</script>';
+  //echo '<script>window.location="index.php";}</script>';
   mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
-  echo '<script></script>';
+  //echo '<script></script>';
  }
 else 
  {
@@ -70,13 +87,10 @@ else
  $_SESSION['ExamTableName']=$ExamTableName;
    //	echo $ExamTableName;
  if(isset($_POST['go']) || isset($_SESSION['course']))
-  {	
-
-
+  {
 	  echo '<br /><div class="row-fluid" >';
 	  echo '<div class="span4 text-left">';
 	  echo '<span class=lead >Max Marks: ';
-	  
 	    if(!isset($_SESSION['max_marks']))
 		 {
 	    $marks=mysql_fetch_array(mysql_query("select sum(marks) as max_marks from $ExamTableName"));
@@ -85,9 +99,6 @@ else
 		echo $_SESSION['max_marks'];
 	  echo '</span>';
 	  echo '</div>';
-
-
-
 	echo '<div class="span4"><span class="lead text-info"><big>';
     echo $_SESSION['examtype'];
 	echo ' - <span class="text-success"><abbr title="'.$_SESSION['course_name'].'" >'.$_SESSION['course'].'</abbr></span></big></span></div>';
