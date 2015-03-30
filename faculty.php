@@ -6,7 +6,9 @@ session_start();
 //////////////////////////////////////////////////////////////////////////////////////////////////
 if($_SESSION['tab']!=1)
 {
+ 
  $_SESSION['tab']=1;
+ unset($_SESSION['ques_bank_id']);
 unset($_SESSION['selected_exam']);
  //echo '<meta http-equiv="refresh" content="0;faculty.php" >';
 }
