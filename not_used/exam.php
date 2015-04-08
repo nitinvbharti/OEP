@@ -4,7 +4,22 @@ require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
 echo '<div class="row-fluid text-center ">';
+/*
+echo '<div class="row"';
+//echo " Current Time:"; 
+echo '<div class="span4 offset4"><span class="lead" id="clock">&nbsp;&nbsp;&nbsp;Current Time: </span>';
+echo '<script>
+var myVar=setInterval(function(){myTimer()},1000);
+myVar.style.color = "Red";
+myVar.style.fontSize = "large";
 
+function myTimer() {
+    var d = new Date();
+    document.getElementById("clock").innerHTML = d.toLocaleTimeString();
+    
+}
+</script>;';
+echo '</div></div>';*/
 if($_POST['logout'])
   {
   		$dt = new DateTime();
@@ -29,18 +44,17 @@ $exam=$_SESSION['examtype'].'_'.'taken';
 if(isset($_POST['complete']) || isset($_SESSION['complete']))
  {
   $_SESSION['complete']=1;
-  mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
   $val=mysql_query("update student_exam_status set $exam=1 where rollnumber='$_SESSION[rollnumber]'and course_id='$_SESSION[course]' ");
  //var_dump($val);
   
- // unset($_SESSION['rollnumber']);
+  unset($_SESSION['rollnumber']);
   echo "<div class='row'>";
   echo '<div class="span12 text-center">';
-  echo '<span class="lead" >Congrats you have successfully completed the'.$_SESSION['course'].'  test</span>';
- // unset($_SESSION['course']);
+  echo '<span class="lead" >Congrats you have successfully'.$_SESSION['course'].'Completed The test</span>';
+  unset($_SESSION['course']);
   echo '</div></div>';
   //echo '<script>window.location="index.php";}</script>';
-  
+  mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
   //echo '<script></script>';
  }
 else 
@@ -90,7 +104,6 @@ else
 	    $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
 	    $ans_col_num=mysql_fetch_array(mysql_query($select));
 	    
-	    
    	    if($qcount!=($ans_col_num[0]-1))
    	    {
    	    	 $i=$ans_col_num[0];
@@ -113,7 +126,17 @@ if(	isset($_SESSION['qcount'])	)
 	 echo '<br />
 	 <div class="row-fluid"  >
 	    <div class="span9" style="text-align:justify;min-height:390px;padding:20px;border-radius:3px;border:1px solid #F5F5F5;box-shadow:0px 0px 5px 0px grey;" >';
-
+  /*
+     if(isset($_POST['qn']))
+	  {
+	   //update_answers($_POST['ops']);
+	   
+	   $vals=explode("_",$_POST['qn']);
+	 //  echo $vals;
+	   $_SESSION['cqno']=$vals[1];
+	   $_SESSION['cqn']=$vals[0];
+	  }
+	  */
 	 if(isset($_POST['prev']))
 	  {
 	   if($_SESSION['cqno']>1)
@@ -141,7 +164,7 @@ if(	isset($_SESSION['qcount'])	)
 	  // update_duration();
 	   $QuestionTable=$_SESSION['course'].'_'.$_SESSION['examtype'];
 	   $q=$q_array[$_SESSION['cqno']-1];
-	  // echo $q;
+	   echo $q;
 	   $question=mysql_fetch_array(mysql_query("select * from $QuestionTable where que_no='$q' "));
 	   $i=3;
 	   $options=array();
@@ -153,15 +176,14 @@ if(	isset($_SESSION['qcount'])	)
 //	   var_dump($opno);
 	   echo '<br/>';
 	   //var_dump($options);
-	 
-	   echo '<div class="lead" >Q<span id="qno">'.$_SESSION['cqno'].'</span> '.$question['question'].'?<span class="text-info"> ';
-	
-	//if(!$test['marks'])
-	  //{
-	  	//
-	  //}
-	  echo '</span>';
-	 
+	   echo '<div class="lead" >Q<span id="qno">'.$_SESSION['cqno'].'</span>) '.$question['question'].'? <span class="text-info">';
+	 if(!$test['marks'])
+	  {
+	  	$quemarks="select marks from $_SESSION[ExamTableName] where question_no='$_SESSION[cqno]'";
+	  	$test['marks']=mysql_fetch_array(mysql_query($quemarks));
+	  }
+
+	 echo '</span>';
 	 /*
      if($test['neg_marking'])
       echo ' <span class="text-error">['.$question['neg_marks'].' M]</span>';
@@ -219,11 +241,7 @@ if(	isset($_SESSION['qcount'])	)
 
 	 echo '</div>';
 	 }
-	 $table=$_SESSION[ExamTableName];
-	 $quemarks="select marks from $table where question_no='$_SESSION[cqno]'";
-	 $test=mysql_fetch_array(mysql_query($quemarks));
-	  	
-	 echo 'Marks:'.$test[marks].'</div>';
+	 echo '</div>';
 	 
 	 if($_SESSION['qcount']>1)
 	  {

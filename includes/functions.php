@@ -745,39 +745,33 @@ function duration()
         $st=mysql_fetch_array(mysql_query("select duration from test where course_id='$_SESSION[course]'"));
         //var_dump($st);
         $st_conv=explode(":", $st[0]);
-        var_dump($st_conv);
+       // var_dump($st_conv);
         $totalsec=$st_conv[0]*3600+$st_conv[1]*60;
         //var_dump($totalsec);
         $_SESSION['totalsec']=$totalsec;
         
-        if(!isset($_SESSION['prev_duration']))
+		 $examstatus=$_SESSION['examtype'].'_'.'taken';
+      		$val=mysql_fetch_array(mysql_query("select $examstatus from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
+		 if($val[0]!=0 && $val[0]!='1')
 		 {
-          $_SESSION['prev_duration']=time(NULL);
+          $_SESSION['prev_duration']=$val[0];
 		  //echo 'taken from prev duration';
-		 }
-		  
+		 }	 
+
+
 	    $_SESSION['start']=time(NULL);
 		$_SESSION['hrs']=0;
 		$_SESSION['mins']=0;
 		$_SESSION['secs']=0;
        }
-	   //$_SESSION['end']=time(NULL);
+       ///////////////////////
+        //var_dump($val);
 
 	  $_SESSION['duration']=time(NULL) - $_SESSION['start'] +$_SESSION['prev_duration'];
+	  echo $_SESSION['duration'];
 	  //echo $_SESSION['duration'];
 	  if($_SESSION['duration'])
 	   {
-		/* 
-		if($_SESSION['secs']==0 && $_SESSION['duration'])
-		 {
-		  $_SESSION['mins']=0;
-		 }
-
-		if($_SESSION['mins']%60==0 && $_SESSION['mins'])
-		 {
-		  $_SESSION['hrs']+=1;
-		 }
-		 */
 		
         $_SESSION['secs']=$_SESSION['duration']%60;
 		if($_SESSION['duration']>3600)
@@ -791,10 +785,12 @@ function duration()
 		 }
 		
 		 $_SESSION['hrs']=floor($_SESSION['duration']/3600);
+
+		
+		
 		echo '<span class="lead"> Time Spent: ';
 		if($_SESSION['hrs']<10)
-		 {echo '0';	
-		 }
+		 echo '0';
 		echo $_SESSION['hrs'];
 		echo ':';
 		if($_SESSION['mins']<10)
@@ -805,23 +801,6 @@ function duration()
 		 echo '0';
 		echo $_SESSION['secs'];
 		echo '</span>';
-		$examtype=$_SESSION['examtype'].'_'.'taken';
-		var_dump($_SESSION['duration']);
-		var_dump($_SESSION['totalsec']);
-		if($_SESSION['duration']<=$_SESSION['totalsec'])
-		{
-  			mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
-	    }
-	    else
-	    {
-	    	mysql_query("UPDATE student_exam_status set $examtype=1 where rollnumber='$_SESSION[rollnumber]' AND course_id='$_SESSION[course]'");
-	    	mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
-	    	session_destroy();
-	    	echo "Your Test is over";
-	    	echo '<script>window.location="index.php";</script>';
-	    }
-
-
 	   }
 	  else
 	   {
