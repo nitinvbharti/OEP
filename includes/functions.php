@@ -213,6 +213,27 @@ function find_examtype($examtype)
 		$exmtyp="endsem";
 	}
 	return $exmtyp;
+}
+///////////Find Exam type to display properly/////////////
+function find_examtype_proper($examtype)
+{	
+	if($examtype=="1")
+	{
+		$exmtyp="Quiz 1";
+	}
+	else if($examtype=="2")
+	{
+		$exmtyp="Quiz 2";
+	}
+	else if($examtype=="3")
+	{
+		$exmtyp="Mid Sem";
+	}
+	else if($examtype=="4")
+	{
+		$exmtyp="End Sem";
+	}
+	return $exmtyp;
 }	
 ///////////////lists which faculty will take what course/////////////
 function list_all_courses($fac_id)
@@ -586,6 +607,7 @@ while($ques_bank=mysql_fetch_array($select))
 
 function find_number($no)
 {
+	//echo "here".$no;
 	if($no="q1")
 		return 1;
 	else if($no="q2")
@@ -614,8 +636,8 @@ function display_test_info($selected_exam)
    else if($test['1']=="4")
     echo '<span class="text-success" > End sem </span>';
    echo '</td></tr>';
-   	  $examno=find_number($test['1']);
-   	  $data=mysql_fetch_array(mysql_query("select * from test where course_id='$_SESSION[course]' and examtype='$examno' and date='$test[2]' "));
+   	  //$examno=find_number($test[1]);
+   	  $data=mysql_fetch_array(mysql_query("select * from test where course_id='$_SESSION[course]' and examtype=$test[1] and date='$test[2]' "));
    	  //echo $_SESSION['date'].$data['duration']."here"."select * from test where course_id='$_SESSION[course]' and examtype='$examno' and date='$test[2]' ";
 	  echo '<tr><td><b>Duration: </b></td><td>'.$data['duration'].'</td></tr>';
 	  echo '<tr><td><b>Date of Exam: </b></td><td>'.$data['date'].'</td></tr>';

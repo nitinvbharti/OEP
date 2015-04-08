@@ -23,8 +23,8 @@
 		 $uname = $_SESSION['faculty_id'];
 		else if($_SESSION['rollnumber'])
 		 $uname = $_SESSION['rollnumber'];
-	    $date_time=date('Y-m-d',time());
-		mysql_query("insert into feedback_mp set feedback='$_POST[feedback]',date_time='$date_time', username='$uname' ");
+	    $date_time=date('h:m||Y-m-d',time());
+		mysql_query("insert into feedback_mp set feedback='$_POST[feedback]',date_time='$date_time',id='$uname' ");
         echo '<br /><div class="alert alert-success fade in" >
 		<button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Success!!! </strong>Your feedback submitted.</div>';
 		$form_print=0;

@@ -27,13 +27,13 @@ if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_S
 	?>	
 	<div class="row-fluid text-center">
 	<br><br>
-	<h3>Select Date </h3>
+	<h3>Select Exam </h3>
 	<form method="POST" action="fac_ques.php">
 		<select name="selected_exam">
 		<?php while($date=mysql_fetch_array($all_dates))// && var_dump(validatedate($date['date']) ))
 		{
 		?>
-		<option value="<?php echo $date['date']."_".find_examtype($date['examtype']) ?>"><?php echo $date['date']." ".find_examtype($date['examtype']) ?></option>
+		<option value="<?php echo $date['date']."_".find_examtype($date['examtype']) ?>"><?php echo find_examtype_proper($date['examtype'])." on ".$date['date'] ?></option>
 		<?php
 		}
 		mysql_free_result($date_set);

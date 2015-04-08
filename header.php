@@ -52,8 +52,6 @@ session_start();
         }
       }
 	  
-	  
-	  
       #wrap > .container {
         padding-top: 60px;
       }

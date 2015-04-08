@@ -7,12 +7,6 @@ include("connect.php");
 /////////////////////////////when logout is clicked///////////////////////////////////////////////////
 if($_POST['logout'])
   {
-  	if(isset($_SESSION['rollnumber']))
-  		{
-  			$dt = new DateTime();
-       $dtformatted=$dt->format('Y-m-d H:i:s');
-       mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
-  		}
     session_destroy();
 	if(isset($_COOKIE["rollnumber"]))
 	  {
@@ -24,7 +18,6 @@ if($_POST['logout'])
 	  }
 	setcookie("name","",time()-3600*4*365*10);
     echo '<script>window.location="index.php";</script>';
-
   }
 /////////////////////////////when logout is clicked///////////////////////////////////////////////////
 
@@ -32,31 +25,14 @@ if($_POST['logout'])
 /////////////////////////////when login is clicked////////////////////////////////////////////////////
 if(isset($_POST['login']))
  {//////////Check for login credentials of students////////////////////////////////////////
-  $select=mysql_query("select name from students where rollnumber='$_POST[username]' and password = '$_POST[password]' ");
+  $select=mysql_query("select name from students where rollnumber='$_POST[username]' and password='$_POST[password]' ");
+  //echo "select name from students where rollnumber='$_POST[username]' and password='$_POST[password]' ";
   if(mysql_num_rows($select))
    {
     $student=mysql_fetch_array($select);
 	$_SESSION['rollnumber']=$_POST['username'];
 	$_SESSION['name']=$student['name'];
 	//echo '<script>window.location="student.php";</script>';
-	   $dt = new DateTime();
-       $dtformatted=$dt->format('Y-m-d H:i:s');
-       //echo '<br>'.$dtformatted;
-       $check=mysql_fetch_array(mysql_query("select * from login where rollnumber='$_SESSION[rollnumber]'"));
-       //var_dump($check);
-       //echo '<br>'.$check[1];
-       if($check[1]=='1')
-       	{
-       		unset($_SESSION['rollnumber']);
-       		$_SESSION['multilogin']='1';
-       	}
-       elseif($check)
-       		{mysql_query("UPDATE login set loggedin='1',lastlogin='$dtformatted' where rollnumber='$_SESSION[rollnumber]'");
-   	   		//echo $dtformatted;
-   	   		}
-   	   else
-       		mysql_query("INSERT INTO login set rollnumber='$_SESSION[rollnumber]',loggedin='1',lastlogin='$dtformatted'");
-
    }
   else
    {///////////////////////checking for login credentials of faculty//////////////////////////////////
@@ -150,14 +126,7 @@ else
 /////////////////form to fill the login data --end///////////////////////
 if(!isset($_SESSION['rollnumber']) && !isset($_SESSION['faculty_id']) && isset($_POST['login']))
  {
- 	if(isset($_SESSION['multilogin']))
- 		{
- 			echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Multiple Login Not Allowed</div>';
-		}
-		else
-		{
-			echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid username or password!</div>';
- 		}
+echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid username or password!</div>';
  }
 echo '</div>';
 }
