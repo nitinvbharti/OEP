@@ -665,7 +665,7 @@ function display_test_info($selected_exam)
 }
 
 
-function update_answers($post)
+function update_answers($post,$ansTable,$ansno)
  {
     $options=$post;
 	   if($options)
@@ -678,18 +678,18 @@ function update_answers($post)
 		 else
 		  $ops.="|".$value;
 		}
-		 if(mysql_num_rows(mysql_query("select ans from answers where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' and ques_id='$_SESSION[cqn]'  ")))
+		 if(mysql_num_rows(mysql_query("select * from $ansTable where rollnumber='$_SESSION[rollnumber]' ")))
 		  {
-		    mysql_query("update answers set ans = '$ops' where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' and ques_id='$_SESSION[cqn]'  ");
+		    mysql_query("update $ansTable set $ansno= '$ops' where rollnumber='$_SESSION[rollnumber]'");
 		  }
 		 else
 		  {
-		    mysql_query("insert into answers set ans = '$ops', rollnumber='$_SESSION[rollnumber]', test_id='$_SESSION[tid]', ques_id='$_SESSION[cqn]' ");
+		    mysql_query("insert into $ansTable set $ansno= '$ops', rollnumber='$_SESSION[rollnumber]' ");
 		  }
 		}
 	   else
 	    {
-		  mysql_query("update answers set ans = '' where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' and ques_id='$_SESSION[cqn]'  ");
+		  mysql_query("update $ansTable set $ansno = '' where rollnumber='$_SESSION[rollnumber]'");
 		}
  }
  
@@ -739,13 +739,20 @@ function questions_header()
 
 
 function duration()
-{
+{	$time=0;
 	  if(!isset($_SESSION['start']))
 	   {
-        $st=mysql_fetch_array(mysql_query("select duration from exam_taken where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' "));
-        if($st['duration'])
+        $st=mysql_fetch_array(mysql_query("select duration from test where course_id='$_SESSION[course]'"));
+        //var_dump($st);
+        $st_conv=explode(":", $st[0]);
+        var_dump($st_conv);
+        $totalsec=$st_conv[0]*3600+$st_conv[1]*60;
+        //var_dump($totalsec);
+        $_SESSION['totalsec']=$totalsec;
+        
+        if(!isset($_SESSION['prev_duration']))
 		 {
-          $_SESSION['prev_duration']=$st['duration'];
+          $_SESSION['prev_duration']=time(NULL);
 		  //echo 'taken from prev duration';
 		 }
 		  
@@ -784,12 +791,10 @@ function duration()
 		 }
 		
 		 $_SESSION['hrs']=floor($_SESSION['duration']/3600);
-
-		
-
 		echo '<span class="lead"> Time Spent: ';
 		if($_SESSION['hrs']<10)
-		 echo '0';
+		 {echo '0';	
+		 }
 		echo $_SESSION['hrs'];
 		echo ':';
 		if($_SESSION['mins']<10)
@@ -800,15 +805,34 @@ function duration()
 		 echo '0';
 		echo $_SESSION['secs'];
 		echo '</span>';
+		$examtype=$_SESSION['examtype'].'_'.'taken';
+		var_dump($_SESSION['duration']);
+		var_dump($_SESSION['totalsec']);
+		if($_SESSION['duration']<=$_SESSION['totalsec'])
+		{
+  			mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
+	    }
+	    else
+	    {
+	    	mysql_query("UPDATE student_exam_status set $examtype=1 where rollnumber='$_SESSION[rollnumber]' AND course_id='$_SESSION[course]'");
+	    	mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+	    	session_destroy();
+	    	echo "Your Test is over";
+	    	echo '<script>window.location="index.php";</script>';
+	    }
+
+
 	   }
 	  else
 	   {
 	    echo '<span class="lead" >Time Spent: 00:00:00</span>';
 	   }
 }
-
+/*
 function update_duration()
 {
-  mysql_query("update exam_taken set duration='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and test_id='$_SESSION[tid]' ");
+	$examtype=$_SESSION['examtype'].'_'.'taken';
+  mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
 }
+*/
 ?>
