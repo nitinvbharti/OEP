@@ -153,7 +153,7 @@ else
  {
    
    echo '<br /><div class="text-left" ><a href="faculty.php" class="btn btn-primary text-right" ><i class="icon-white icon-chevron-left" ></i> Go Back</a></div><br /><p class="lead">You have following tests set in the course <big>'.$_SESSION['course'].'</big></p><form action="update_exam.php" method="get" ><select name="test" >';
-   $select = mysql_query("select examtype, date from test where course_id='$_SESSION[course]' ");
+   $select = mysql_query("select examtype, date from test where course_id='$_SESSION[course]' order by date");
    while($test=mysql_fetch_array($select))
      {
       if(validateDate2($test['date']))

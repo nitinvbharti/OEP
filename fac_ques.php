@@ -21,7 +21,7 @@ if(isset($_POST['selected_exam']) && isset($_POST['go']))
 if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_SESSION['date'])))
 {
 	//echo "I see u..";
-	$all_dates=mysql_query("select date,examtype from test where course_id='$_SESSION[course]' ");
+	$all_dates=mysql_query("select date,examtype from test where course_id='$_SESSION[course]' order by date");
 	//while($new=mysql_fetch_array($all_dates))
 	//	echo $new['date']."  and  ";
 	?>	
@@ -30,11 +30,14 @@ if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_S
 	<h3>Select Exam </h3>
 	<form method="POST" action="fac_ques.php">
 		<select name="selected_exam">
-		<?php while($date=mysql_fetch_array($all_dates))// && var_dump(validatedate($date['date']) ))
+		<?php while($date=mysql_fetch_array($all_dates))
 		{
+			if(validateDate($date['date']))
+			{
 		?>
 		<option value="<?php echo $date['date']."_".find_examtype($date['examtype']) ?>"><?php echo find_examtype_proper($date['examtype'])." on ".$date['date'] ?></option>
 		<?php
+			}
 		}
 		mysql_free_result($date_set);
 		?>
