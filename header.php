@@ -17,6 +17,25 @@ session_start();
     <link href="css/docs.css" rel="stylesheet" media="screen"  media="screen" >
     <link href="css/prettify.css" rel="stylesheet" media="screen" >
     <link rel="stylesheet" href="css/style.css" type="text/css"  media="screen" >
+    
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/check_browser_close.js"></script>
+   <!--
+    <script type="text/javascript">
+
+window.onbeforeunload = function (event) {
+    var message = 'Important: Please use logout button to exit';
+    if (typeof event == 'undefined') {
+        event = window.event;
+    }
+    if (event) {
+        event.returnValue = message;
+    }
+    return message;
+};
+</script>
+-->
+
 <style>
       html,
       body {
