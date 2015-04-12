@@ -89,8 +89,7 @@ else
 	    $_SESSION['ansTable']=$anstablename;
 	    $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
 	    $ans_col_num=mysql_fetch_array(mysql_query($select));
-	    
-	    
+	    echo $ans_col_num[0];
    	    if($qcount!=($ans_col_num[0]-1))
    	    {
    	    	 $i=$ans_col_num[0];
@@ -226,10 +225,10 @@ if(	isset($_SESSION['qcount'])	)
 	 echo '</div>';
 	 }
 	 $table=$_SESSION[ExamTableName];
-	 $quemarks="select marks from $table where question_no='$_SESSION[cqno]'";
+	 $quemarks="select * from $table where question_no='$_SESSION[cqno]'";
 	 $test=mysql_fetch_array(mysql_query($quemarks));
 	  	
-	 echo 'Marks:'.$test[marks].'</div>';
+	 echo '<div class="span5" >Marks:'.$test[marks].'</div><div class="span5" style="padding-left:20%;">Negative Marks : '.$test[neg_marking].'</div></div>';
 	 
 	 if($_SESSION['qcount']>1)
 	  {
@@ -253,8 +252,35 @@ if(	isset($_SESSION['qcount'])	)
 	 echo '<div class="span4 offset4"><br /><button class="btn btn-primary btn-large btn-block" name="complete" ><i class="icon-white icon-flag" ></i> Test Completed</button></span></div>';
 	 echo '</div>';
 	  }
-  
+
  }}
  echo '</div>';
+
+	  /////////// Side table to check which is answered////////////////
+  	 echo '<div class="span3" style="padding:20px;min-height:390px;border-radius:3px;border:1px solid #F5F5F5;box-shadow:0px 0px 5px 0px grey;" >';
+	 echo '<table align=center >';
+	 echo '<h3 style="margin-top:-5px;">Question List</h3>';
+	 $exam_detail="ans_".$_SESSION['course']."_".$_SESSION['examtype'];
+	 // echo $exam_detail.$exam; -->correct
+	 //$qbank=30
+	 for($i=1;$i<=$_SESSION['qcount'];$i++)
+	  {
+	   if($i%4==1)
+	    echo '<tr>';
+	   $qid=$_SESSION["q".$i];
+	   $qno="Q".$i;
+	   echo '<td class="qn" ><button type="submit" name="qn" value="'.$qid.'_'.$i.'"        class="btn btn-primary btn-large ';
+	   $ans=mysql_fetch_array(mysql_query("select $qno from $exam_detail where  rollnumber='$_SESSION[rollnumber]' "));
+	   if($ans["$qno"])
+	    echo ' btn-success';
+	   else
+	    echo ' btn-danger';
+	   echo '" />'.$i.'</button></td>';
+	   if($i%4==0)
+	    echo '</tr>';
+	  }
+	 echo '</table>';
+	 /////////////////////             ///////////////////////
+	 echo '</div>';
 include("footer.php");
 ?>

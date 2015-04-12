@@ -94,9 +94,8 @@ $_SESSION['course']=strtoupper($_POST['course']);
 		
  	//$_SESSION['examtype']=$test[0];
    // var_dump($test);
-	
-
- if($test)
+	//echo $_SESSION['examtype'];
+ if(isset($test))
 	{
 		if($test[0]=='1')
 		{	$_SESSION['examtype']='q1';
