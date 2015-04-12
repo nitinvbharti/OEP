@@ -727,7 +727,7 @@ function questions_header()
 </div>
 <div class="modal-footer">
 <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Ok</button>
-<a href="update_exam.php?test=<?php echo $_SESSION['tid']; ?>&update_exam=yes" class="btn btn-warning" ><i class="icon-white icon-pencil"></i> Update</a>
+<a href="update_exam.php?test=<?php echo $_SESSION['tid']; ?>update_exam=yes" class="btn btn-warning" ><i class="icon-white icon-pencil"></i> Update</a>
 </div>
 </div>
 <?php
@@ -810,7 +810,27 @@ function duration()
 function update_duration()
 {
 	$examtype=$_SESSION['examtype'].'_'.'taken';
-  mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
+if(!isset($_SESSION[totalsec]))
+		{
+			$st=mysql_fetch_array(mysql_query("select duration from test where course_id='$_SESSION[course]'"));
+        //var_dump($st);
+        	$st_conv=explode(":", $st[0]);
+       	    $totalsec=$st_conv[0]*3600+$st_conv[1]*60;
+        	$_SESSION['totalsec']=$totalsec;        
+      		$val=mysql_fetch_array(mysql_query("select $examtype from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
+	
+		}
+	else{
+		if($_SESSION[duration]<=$_SESSION[totalsec])
+	  		mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
+		else
+			{
+				echo '<script>window.alert("Your Exam  is Over.")</script>';
+				 mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+				session_destroy();
+				echo '<script>window.location="index.php";</script>';
+			}	
+		}	
 }
 
 ?>
