@@ -768,8 +768,7 @@ function duration()
         //var_dump($val);
 
 	  $_SESSION['duration']=time(NULL) - $_SESSION['start'] +$_SESSION['prev_duration'];
-	  echo $_SESSION['duration'];
-	  //echo $_SESSION['duration'];
+
 	  if($_SESSION['duration'])
 	   {
 		
@@ -807,11 +806,11 @@ function duration()
 	    echo '<span class="lead" >Time Spent: 00:00:00</span>';
 	   }
 }
-/*
+
 function update_duration()
 {
 	$examtype=$_SESSION['examtype'].'_'.'taken';
   mysql_query("update student_exam_status set $examtype='$_SESSION[duration]' where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' ");
 }
-*/
+
 ?>

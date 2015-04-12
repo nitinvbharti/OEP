@@ -36,7 +36,7 @@ if(isset($_POST['login']))
   if(mysql_num_rows($select))
    {
     $student=mysql_fetch_array($select);
-	$_SESSION['rollnumber']=$_POST['username'];
+	$_SESSION['rollnumber']=strtoupper($_POST['username']);
 	$_SESSION['name']=$student['name'];
 	//echo '<script>window.location="student.php";</script>';
 	   $dt = new DateTime();

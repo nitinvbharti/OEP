@@ -136,9 +136,15 @@ if(	isset($_SESSION['qcount'])	)
 	 if(isset($_POST['answer']))
 	  {
 	   update_answers($_POST['ops'],$_SESSION['ansTable'],$_SESSION['ansno']);
+	   if($_SESSION['cqno']<$_SESSION['qcount'])
+	    {	 
+	    $_SESSION['cqno']=$_SESSION['cqno']+1;
+	    $_SESSION['cqn']=$_SESSION["q".$_SESSION['qcount']];
+	    }
+
 	  }
 	  
-	  // update_duration();
+	   update_duration();
 	   $QuestionTable=$_SESSION['course'].'_'.$_SESSION['examtype'];
 	   $q=$q_array[$_SESSION['cqno']-1];
 	  // echo $q;

@@ -30,8 +30,7 @@ if(isset($_SESSION['rollnumber']))
 
 if(isset($_POST['go']))
 {
-$_SESSION['course']=$_POST['course'];
-
+$_SESSION['course']=strtoupper($_POST['course']);
 	$i=0;
 	$j=0;
 	//$active_xams=array();
@@ -89,8 +88,9 @@ $_SESSION['course']=$_POST['course'];
 	if($enrolled=='0')
 		echo '<span class="lead" >You are not enrolled in '.$_SESSION[course].' </span>';
 	else		
-		{$exam="SELECT examtype,semester from test where course_id='$_SESSION[course]'";
-		$test=mysql_fetch_array(mysql_query($exam));
+		{
+			$exam="SELECT examtype,semester from test where course_id='$_SESSION[course]'";
+			$test=mysql_fetch_array(mysql_query($exam));
 		
  	//$_SESSION['examtype']=$test[0];
    // var_dump($test);
@@ -120,13 +120,20 @@ $_SESSION['course']=$_POST['course'];
 			$_SESSION['sem']='julynov_2015';
 		else
 			$_SESSION['sem']='janmay_2015';
-	}
 
+		$chk=mysql_fetch_array(mysql_query("select * from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
+		if($chk==NULL)
+			{
+				$stu_add=mysql_query("INSERT into student_exam_status values('$_SESSION[rollnumber]','$_SESSION[course]','0','0','0','0','0')");
+				var_dump($stu_add);
+			}
+	}
 
 
 $examstatus=$_SESSION['examtype'].'_'.'taken';
 $val=mysql_fetch_array(mysql_query("select $examstatus from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
 //var_dump($val);
+
 if($val[$examstatus]==='0')
 	{
 		$_SESSION['examstatus']='0';
@@ -153,18 +160,11 @@ else
 		}
 	else	
 		{
+
 			echo '<span class="lead" >NO exam has been set for '.$_SESSION[course].' Course. Consult the related faculty.</span>';
 		}
 	}
-}///
-//if(isset($_SESSION['examstatus'])
-//{		
-
-//}
-
-
-
-
+}
 }
 
 }
@@ -183,11 +183,6 @@ $select=mysql_query("SELECT course_no from $cur_table_name");
  echo '<br /><br /><button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Select Course</button>';
  echo '</form>';
 }
-
-
-
-
-	
 
 // if($test[0]==NULL)
  ///	{
