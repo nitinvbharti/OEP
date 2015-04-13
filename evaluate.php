@@ -81,7 +81,7 @@ if(isset($_SESSION['course']))
             }
             $l=$check[$cols+1];
              //echo $l;
-              mysql_query("update ans_com302_q1 set marks={$l} where rollnumber='{$roll}'");
+              mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
 
@@ -155,7 +155,7 @@ if(isset($_POST['2']))
             }
             $l=$check[$cols+1];
              //echo $l;
-              mysql_query("update ans_com302_q1 set marks={$l} where rollnumber='{$roll}'");
+              mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
 
@@ -229,7 +229,7 @@ if(isset($_POST['3']))
             }
             $l=$check[$cols+1];
              //echo $l;
-              mysql_query("update ans_com302_q1 set marks={$l} where rollnumber='{$roll}'");
+              mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
 
@@ -303,7 +303,7 @@ if(isset($_POST['4']))
             }
             $l=$check[$cols+1];
              //echo $l;
-              mysql_query("update ans_com302_q1 set marks={$l} where rollnumber='{$roll}'");
+              mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
 
@@ -377,7 +377,7 @@ if(isset($_POST['5']))
             }
             $l=$check[$cols+1];
              //echo $l;
-              mysql_query("update ans_com302_q1 set marks={$l} where rollnumber='{$roll}'");
+              mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
 
