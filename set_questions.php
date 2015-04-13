@@ -42,64 +42,77 @@ if($_GET['step']==2)
     //echo $_GET['exam'];  -->correct
 		//echo $_GET[duration];
 		//echo $_GET[exp_date];
-		
+		// echo "here";
 		if(!validateDate($_GET['exp_date']))/// check if vali date has entered
 		{
-      //echo "ss1";
+      // echo "ss1";
 		unset($_GET['exp_date']);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid date!</div>';
 		$_SESSION['step']=1;
 		}
-		if(!validateTime($_GET['duration']))//check if valid time has been entered
+    // echo $_GET['duration'];
+		if(!validateTime($_GET['duration']))
 		{
-      //echo "ss2";
+      // echo "ss2";
 		unset($_GET['duration']);
 		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid duration!</div>';
+    // echo "here";
 		$_SESSION['step']=1;
 		}
 		else
 		{
-		if(isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
-		{
-      //echo $_SESSION['course']." ".$_GET['exam']." ".$_GET['exp_date'];
-		  $_SESSION['exam']=$_GET['exam'];
-      $_SESSION['date']=$_GET['exp_date'];
-      $check=mysql_query("select course_id from test where course_id='$_SESSION[course]' and examtype=$_GET[exam] and date='$_GET[exp_date]' ");
-      $row=mysql_fetch_array($check);
-      $ndate=explode('-',$_GET['exp_date']);
-      if($ndate[1]>=1 && $ndate[1]<=6)
-          $sem=2;
-      else if($ndate[1]>=7 && $ndate[1]<=12)
-          $sem=1;
-      if($row=="" && isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
-      {
-        //echo "  ss4  ";
-        //echo $sem."i";
-        mysql_query("insert into test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]',max_marks='$_GET[max_marks]',step='$_SESSION[step]',semester='$sem' ");
-	  	}
-      else
-      {
-       //echo " ss5 ";
-        //echo $sem."u";
-        mysql_query("update test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', semester='$sem' where course_id='$_SESSION[course]' and examtype='$_GET[exam]' and date='$_GET[exp_date]' ");
+  		if(isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
+  		{
+        //echo $_SESSION['course']." ".$_GET['exam']." ".$_GET['exp_date'];
+  		  $_SESSION['exam']=$_GET['exam'];
+        $_SESSION['date']=$_GET['exp_date'];
+        $ndate=explode('-',$_GET['exp_date']);
+        if($ndate[1]>=1 && $ndate[1]<=6)
+            $sem=2;
+        else if($ndate[1]>=7 && $ndate[1]<=12)
+            $sem=1;
+        $check=mysql_query("select * from test where course_id='$_SESSION[course]' and examtype=$_GET[exam] and date like '2015%' and semester='$sem' ");
+        $row=mysql_fetch_array($check);
+        if($row=="" && isset($_GET['duration']) && isset($_GET['exam']) && isset($_GET['exp_date']))
+        {
+          //echo "  ss4  ";
+          //echo $sem."i";
+          mysql_query("insert into test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]',max_marks='$_GET[max_marks]',step='$_SESSION[step]',semester='$sem' ");
+          $_SESSION['step']=2;
+  	  	}
+        else if($row['date']==$_SESSION['date'] && $row['semester']==$sem)
+        {
+         //echo " ss5 ";
+          //echo $sem."u";
+          mysql_query("update test set course_id='$_SESSION[course]', examtype='$_GET[exam]', duration='$_GET[duration]', date='$_GET[exp_date]', step='$_SESSION[step]', semester='$sem' where course_id='$_SESSION[course]' and examtype='$_GET[exam]' and date='$_GET[exp_date]' ");
+          $_SESSION['step']=2;
+        }
+        else
+        {
+          echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>This exam already exists on some other date for this semester!!! </strong></div>';
+          $_SESSION['step']=1;
+          unset($_GET['exam']);
+          unset($_GET['date']);
+          unset($_SESSION['exam']);
+          unset($_SESSION['date']);
+          //echo $_SESSION['step'];
+        }
       }
-    }
-		else
-		{
-		echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Invalid duration!</div>';
-    }
-		$_SESSION['step']=2;
 		}
 		}
 		else
 		{
-		$_SESSION['step']=1;
+		  $_SESSION['step']=1;
+      if($_GET['exp_date']=="")
+        echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Date not set!</div>';
+      if($_GET['duration']=="")
+        echo '<div class="alert fade in" ><button type="button" class="close" data-dismiss="alert" >&times;</button><strong>Sorry!!! </strong>Time not set!</div>';
 		}
 		
  }
  
  ////////////third and final stage for creation of new exam////////////////////////
-if($_GET['step']==2)
+if($_SESSION['step']==2)
  {
   //echo $_SESSION['course'];
   if(isset($_SESSION['course']) && $_GET['max_marks']!="" )
@@ -216,7 +229,7 @@ if($_SESSION['step']==1)
   <?php 
 	if($test['duration'])
 	    echo "value=".$test['duration']; 
-  ?> maxlength="5" placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
+  ?> maxlength="5" type="time" max="3:00" placeholder="(Ex: 2:30 i.e, 2 hrs 30 mins)" />
   </div>
   </div>
   
@@ -224,14 +237,14 @@ if($_SESSION['step']==1)
   <div class="control-group" >
   <label class="control-label" for="exp_date"  ><strong>Expected Date: </strong></label>
   <div class="controls">
-  <input type="date" class="input" name="exp_date" id="exp_date" maxlength="10" <?php  if($test['duration']) echo "value=".$test['date']; ?> placeholder="YYYY-MM-DD" />
+  <input type="date" class="input" type="date" min="2015-01-01" name="exp_date" id="exp_date" maxlength="10" <?php  if($test['duration']) echo "value=".$test['date']; ?> placeholder="YYYY-MM-DD" />
   </div>
   </div>
   <!--Maximum marks of the exam -->
   <div class="control-group" >
   <label class="control-label" for="max_marks"  ><strong>Max Marks: </strong></label>
   <div class="controls">
-  <input type="number" class="input" name="max_marks" maxlength="3" <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks" placeholder="maximum marks..." />
+  <input type="number" class="input" name="max_marks" min="0" max="100" maxlength="3" <?php if($test['max_marks']) echo 'value="'.$test['max_marks'].'"'; ?> id="max_marks" placeholder="maximum marks..." />
   </div>
   </div>
   <!--end-->

@@ -8,7 +8,7 @@ function validateTime($rawtime,$seperator2=':')
 	//echo $rawtime;
 	$ntime=explode($seperator2,$rawtime);
 	//echo $ntime[0].$ntime[1];
-	if($ntime[0]>=0 && $ntime[0]<=23 && $ntime[1]>=0 && $ntime[1]<=59)
+	if($ntime[0]>=0 && $ntime[0]<=3 && $ntime[1]>=0 && ($ntime[0]<=2 &&$ntime[1]<=59))
 	{
 		return true;
 	}

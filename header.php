@@ -100,10 +100,10 @@ session_start();
 				  ?>
               
                 <li class="<?php if($_SESSION['tab']=="1") echo "active"; ?>" ><a href="<?php if($_SESSION['faculty_id']){ echo "faculty.php"; } ?>">Dashboard</a></li>
-				<li class="<?php if($_SESSION['tab']=="3") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "set_questions.php"; } else echo "faculty.php"; ?>">Set Exam</a></li>
-				<li class="<?php if($_SESSION['tab']=="7") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "fac_ques.php"; } else echo "faculty.php"; ?>">Set Questions</a></li>
-				<li class="<?php if($_SESSION['tab']=="4") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "update_exam.php"; } else echo "faculty.php"; ?>">Schedule Exam</a></li>
-                <li class="<?php if($_SESSION['tab']=="5") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "faculty.php"; } else echo "faculty.php"; ?>">Evaluate</a></li>
+        				<li class="<?php if($_SESSION['tab']=="3") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "set_questions.php"; } else echo "faculty.php"; ?>">Set Exam</a></li>
+        				<li class="<?php if($_SESSION['tab']=="7") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "fac_ques.php"; } else echo "faculty.php"; ?>">Set Questions</a></li>
+        				<li class="<?php if($_SESSION['tab']=="4") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "update_exam.php"; } else echo "faculty.php"; ?>">Schedule Exam</a></li>
+                <li class="<?php if($_SESSION['tab']=="5") echo "active"; ?>" ><a href="<?php if($_SESSION['course']){ echo "evaluate.php"; } else echo "faculty.php"; ?>">Evaluate</a></li>
                 <li class="dropdown <?php if($_SESSION['tab']=="6") echo "active"; ?>"  >
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
                   <ul class="dropdown-menu">

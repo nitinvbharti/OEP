@@ -14,13 +14,13 @@ require("header.php");
 
 if(isset($_POST['selected_exam']) && isset($_POST['go']))
 {
-	//echo $_POST['selected_exam'];
+	echo $_POST['selected_exam'];
 	$_SESSION['selected_exam']=$_POST['selected_exam'];
 }
-
+echo $_SESSION['exam'].$_SESSION['date'];
 if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_SESSION['date'])))
 {
-	//echo "I see u..";
+	// echo "I see u..";
 	$all_dates=mysql_query("select date,examtype from test where course_id='$_SESSION[course]' order by date");
 	//while($new=mysql_fetch_array($all_dates))
 	//	echo $new['date']."  and  ";
@@ -51,7 +51,7 @@ if(!isset($_SESSION['selected_exam']) && !(isset($_SESSION['exam']) && isset($_S
 else if(isset($_SESSION['faculty_id']) && isset($_SESSION['course']))
  {
  	
- 	//echo $_SESSION['selected_exam'];
+ 	echo $_SESSION['selected_exam'];
  	////////////To make all data default if reached from finish in set_questions.php
  	$check=mysql_fetch_array(mysql_query("select step from test where examtype='$_SESSION[exam]' and course_id='$_SESSION[course]' and date='$_SESSION[date]' "));
  	//echo "if i m here".$check[step]."need help";

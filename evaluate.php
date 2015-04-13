@@ -1,15 +1,14 @@
 <?php
 session_start();
-require("header.php");
-
-if($_SESSION['tab']!=1)
+if($_SESSION['tab']!=5)
 {
  
- $_SESSION['tab']=1;
- unset($_SESSION['ques_bank_id']);
-unset($_SESSION['selected_exam']);
+ $_SESSION['tab']=5;
  //echo '<meta http-equiv="refresh" content="0;faculty.php" >';
 }
+require("header.php");
+
+
 
 if($_SESSION['faculty_id'])
 {
