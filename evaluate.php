@@ -20,12 +20,9 @@ if(isset($_SESSION['course']))
        if(isset($_POST['1']))
 	   {
 		 $check=mysql_num_rows(mysql_query("select exam_activation from test where course_id='$_SESSION[course]' and examtype='1' "));
-<<<<<<< HEAD
+
      if($_SESSION['course'])
      {
-=======
-    
->>>>>>> origin/master
           if($check==0)
           {
           	echo 'No finished exams to evaluate';
