@@ -77,6 +77,8 @@ else
 		$q_array[]=$question_nums['question_no'];
 		$qcount=$qcount+1;
 		}
+
+	    // echo "$qcount";
 	if(!isset($_SESSION['cqno']))
 	 { 	
 		$_SESSION['qcount']=$qcount;
@@ -88,13 +90,18 @@ else
 	   $anstablename=strtolower($anstablename);
 	     //var_dump($anstablename);
 	    $_SESSION['ansTable']=$anstablename;
-	    $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
-	    $ans_col_num=mysql_fetch_array(mysql_query($select));
-	    echo $ans_col_num[0];
-   	    if($qcount!=($ans_col_num[0]-1))
-   	    {
-   	    	 $i=$ans_col_num[0];
-   	    while($i<=$qcount){
+	    $check_table_exist=mysql_num_rows(mysql_query("show tables like '".$anstablename."'"));
+	    if($check_table_exist==0)
+	    {
+	    	mysql_query("create table $anstablename(rollnumber char(9) not null,primary key(rollnumber))");
+	    }
+	    // $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
+	    // $ans_col_num=mysql_fetch_array(mysql_query($select));
+	    // echo $ans_col_num[0];
+   	    // if($qcount!=($ans_col_num[0]-1))
+   	    // {
+   	    	 $i=1;
+   	    	while($i<=$qcount){
    	    	if($i==1)
    	    		$colname_prev="rollnumber";
    	    	else
@@ -105,8 +112,24 @@ else
    	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
    	   		$i=$i+1;
    	   		}
-   	    }
+   	    
 
+	}
+	// echo "here".$_GET['qn'];
+	if(isset($_POST['jump_q']))
+	{
+		// echo "here";
+		$ct=1;
+		while($ct<=$_SESSION['qcount'])
+		{
+			$qnom='qn'.$ct;
+			echo $_POST[$qnom];
+			if(isset($_POST['qn'.$ct])){
+			$_SESSION['cqno']=$_POST['qn'.$ct];
+			unset($_POST['qn'.$ct]);	
+			}
+			$ct++;	
+		}
 	}
 //var_dump($_SESSION['qlist']);
 if(	isset($_SESSION['qcount'])	)
@@ -258,9 +281,11 @@ if(	isset($_SESSION['qcount'])	)
  echo '</div>';
 
 	  /////////// Side table to check which is answered////////////////
+
   	 echo '<div class="span3" style="padding:20px;min-height:390px;border-radius:3px;border:1px solid #F5F5F5;box-shadow:0px 0px 5px 0px grey;" >';
+	 echo '<h3 style="margin-top:-5px;" align=center >Question List</h3>';
+	 echo '<form action="exam.php" method="post">';
 	 echo '<table align=center >';
-	 echo '<h3 style="margin-top:-5px;">Question List</h3>';
 	 $exam_detail="ans_".$_SESSION['course']."_".$_SESSION['examtype'];
 	 // echo $exam_detail.$exam; -->correct
 	 //$qbank=30
@@ -270,17 +295,19 @@ if(	isset($_SESSION['qcount'])	)
 	    echo '<tr>';
 	   $qid=$_SESSION["q".$i];
 	   $qno="Q".$i;
-	   echo '<td class="qn" ><button type="submit" name="qn" value="'.$qid.'_'.$i.'"        class="btn btn-primary btn-large ';
+	   echo '<td class="qn" ><input name="qn'.$i.'" value="'.$i.'" type="hidden" /><button type="submit" name="jump_q" class="btn btn-primary btn-large ';
 	   $ans=mysql_fetch_array(mysql_query("select $qno from $exam_detail where  rollnumber='$_SESSION[rollnumber]' "));
 	   if($ans["$qno"])
 	    echo ' btn-success';
 	   else
 	    echo ' btn-danger';
-	   echo '" />'.$i.'</button></td>';
+	   echo '" >'.$i.'</button></td>';
 	   if($i%4==0)
 	    echo '</tr>';
 	  }
-	 echo '</table>';
+	 echo '</table>'; 
+	  echo '</form>';
+	
 	 /////////////////////             ///////////////////////
 	 echo '</div>';
 include("footer.php");

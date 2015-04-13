@@ -20,7 +20,7 @@ if(isset($_SESSION['course']))
        if(isset($_POST['1']))
 	   {
 		 $check=mysql_num_rows(mysql_query("select exam_activation from test where course_id='$_SESSION[course]' and examtype='1' "));
-     if($_SESSION['course']==COM302)
+     if($_SESSION['course'])
      {
           if($check==0)
           {
