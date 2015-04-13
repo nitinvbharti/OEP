@@ -9,7 +9,8 @@ if($_POST['logout'])
   {
   		$dt = new DateTime();
        $dtformatted=$dt->format('Y-m-d H:i:s');
-  	 mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' WHERE rollnumber='$_SESSION[rollnumber]'");
+       $ip=$_SESSION['ip'];
+  	 mysql_query("UPDATE login set loggedin='0' AND lastlogin='$dtformatted' AND ipaddress='$ip' WHERE rollnumber='$_SESSION[rollnumber]'");
   	
     session_destroy();
 	if(isset($_COOKIE["rollnumber"]))

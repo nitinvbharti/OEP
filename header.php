@@ -23,7 +23,7 @@ session_start();
    <!--
     <script type="text/javascript">
 
-window.onbeforeunload = function (event) {
+    window.onbeforeunload = function (event) {
     var message = 'Important: Please use logout button to exit';
     if (typeof event == 'undefined') {
         event = window.event;

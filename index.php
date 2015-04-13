@@ -4,6 +4,8 @@ include("connect.php");
 //include("header.php");
 require("header.php");
 
+
+
 /////////////////////////////when logout is clicked///////////////////////////////////////////////////
 if($_POST['logout'])
   {
@@ -35,9 +37,15 @@ if(isset($_POST['login']))
   $select=mysql_query("select name from students where rollnumber='$_POST[username]' and password = '$_POST[password]' ");
   if(mysql_num_rows($select))
    {
+    $Allowed=1;
+    //var_dump(expression)
+    if($Allowed=='1')
+    {
+      $_SESSION['ip']=$_SERVER['REMOTE_ADDR'];
+      $ip=$_SESSION['ip'];
     $student=mysql_fetch_array($select);
-	$_SESSION['rollnumber']=strtoupper($_POST['username']);
-	$_SESSION['name']=$student['name'];
+	  $_SESSION['rollnumber']=strtoupper($_POST['username']);
+	  $_SESSION['name']=$student['name'];
 	//echo '<script>window.location="student.php";</script>';
 	   $dt = new DateTime();
        $dtformatted=$dt->format('Y-m-d H:i:s');
@@ -47,21 +55,27 @@ if(isset($_POST['login']))
        //echo '<br>'.$check[1];
        if($check[1]=='1')
        	{
-       		unset($_SESSION['rollnumber']);
-       		$multilogin='1';
-       		//$_SESSION['multilogin']='1';
-
+       		if($check[3]!=$ip)
+            {unset($_SESSION['rollnumber']);
+       		   $multilogin='1';
+       		   $_SESSION['multilogin']='1';
+             }
        	}
        elseif($check[1]=='0')
-       		{mysql_query("UPDATE login set loggedin='1',lastlogin='$dtformatted' where rollnumber='$_SESSION[rollnumber]'");
+       		{mysql_query("UPDATE login set loggedin='1',lastlogin='$dtformatted',ipaddress='$ip' where rollnumber='$_SESSION[rollnumber]'");
    	   		//echo $dtformatted;
        		$multilogin='0';
    	   		}
    	   else
-       		{mysql_query("INSERT INTO login set rollnumber='$_SESSION[rollnumber]',loggedin='1',lastlogin='$dtformatted'");
+       		{mysql_query("INSERT INTO login set rollnumber='$_SESSION[rollnumber]',loggedin='1',lastlogin='$dtformatted',ipaddress='$ip'");
        		$multilogin='0';
        		}
    }
+   else
+   {
+      ///when belongs to bad ip range
+   }
+ }
   else
    {///////////////////////checking for login credentials of faculty//////////////////////////////////
     $select=mysql_query("select name from faculty where faculty_id='$_POST[username]' and password='$_POST[password]' ");
@@ -70,7 +84,7 @@ if(isset($_POST['login']))
 	   $faculty=mysql_fetch_array($select);
        $_SESSION['faculty_id']=$_POST['username'];
 	   $_SESSION['name']=$faculty['name'];
-	 //echo '<script>window.location="faculty.php";</script>';
+	   //echo '<script>window.location="faculty.php";</script>';
      }
    }
 
@@ -145,7 +159,7 @@ else
 </tr>
 
 <tr><td><label class="control-label" ><input type="checkbox"  class="checkbox" name="remember" value=1/> Remember me</label></td></tr>
-<tr><td><input type="submit"  class="btn btn-primary" name="login" value="Login" /></td></tr>
+<tr><td><a><input type="submit"  class="btn btn-primary" name="login" value="Login" /></a></td></tr>
 </table>
 </form>
 
