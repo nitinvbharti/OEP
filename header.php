@@ -112,12 +112,15 @@ session_start();
                     <li><a href="feedback.php">Submit Feedback</a></li>
                   </ul>
                 </li>
+
 				<?php
 			}
 			else if($_SESSION['rollnumber'])
 			 {
 			  ?>
                <li class="<?php if($_SESSION['tab']=="1") echo "active"; ?>" ><a href="about.php" >About OEP</a></li>
+               <li class="<?php if($_SESSION['tab']=="1") echo "active"; ?>" ><a href="markshistory.php" >Marks History</a></li>
+              
 			  <?php
 			 }
 				?>
