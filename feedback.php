@@ -1,3 +1,6 @@
+<?php
+session_start();
+  /*
 <!--
 *************************************************
 
@@ -5,9 +8,8 @@ Feed back page for the users.
 
 *************************************************
 -->
+  */
 
-<?php
-  session_start();
   require("header.php");
   //echo '<title>Feedback - IIITD&M Management Portal</title>';
 

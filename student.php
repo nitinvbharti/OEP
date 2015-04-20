@@ -1,3 +1,6 @@
+<?php
+session_start();
+/*
 <!--
 *************************************************
 
@@ -6,9 +9,8 @@ and redirect students to respective exam based on the choice.
 
 *************************************************
 -->
+*/
 
-<?php
-session_start();
 require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
@@ -23,17 +25,7 @@ if(isset($_SESSION['rollnumber']))
  	else
  		$cyr='2014';
  	$cur_table_name='curriculum'.'_'.$cyr.'_'.$branch;
-    //	echo $cur_table_name;
- 	/*
- 	////////////
- 	$ccount=0;
- 	$select_course=mysql_query("SELECT course_no from $cur_table_name");
- 	while($course=mysql_fetch_array($select_course))
-		{//var_dump( $course);
-		$course_list[$ccount]=$course['course_no'];
-		$ccount=$ccount+1;
-		}
-*/
+
 if(isset($_POST['go']))
 {
 $_SESSION['course']=strtoupper($_POST['course']);

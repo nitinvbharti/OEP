@@ -1,13 +1,13 @@
-<!--
+<?php
+session_start();
+/*<!--
 *************************************************
 
 Homepage for faculty. Includes links for setting test paper, updating evaluating etc.
 
 *************************************************
 -->
-<?php
-session_start();
-
+*/
 if(!isset($_SESSION['tab']))
 	$_SESSION['tab']=0;
 

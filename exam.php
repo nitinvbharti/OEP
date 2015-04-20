@@ -1,3 +1,5 @@
+<?php
+/*
 <!--
 *************************************************
 
@@ -5,8 +7,7 @@ Student is redirected to this page to give exam. Code related to conducting exam
 
 *************************************************
 -->
-
-<?php
+*/
 session_start();
 require 'header.php';
 if(isset($_SESSION['rollnumber']))

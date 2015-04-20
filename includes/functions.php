@@ -1,12 +1,14 @@
-<!--
+
+<?php
+/*<!--
 ********************************************
 
 It contains all thee related functions required for the project.
 
 ********************************************
--->
+-->*/
 
-<?php
+
 include("connect.php");
 
 error_reporting(E_ERROR | E_PARSE);

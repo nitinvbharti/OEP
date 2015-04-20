@@ -1,18 +1,13 @@
-<!--
+<?php
+session_start();
+/*
 *************************************************
 
 This page has code related to login. It authentictes the user as facuty or student and redirects to corresponding page.
 It also starts the session.
 
 *************************************************
--->
-
-
-
-
-
-<?php
-session_start();
+*/
 include("connect.php");
 //include("header.php");
 require("header.php");

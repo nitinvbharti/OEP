@@ -1,3 +1,6 @@
+<?php
+session_start();
+/*
 <!--
 *************************************************
 
@@ -5,8 +8,7 @@ This page contains code related to student's marks and evaluation.
 
 *************************************************
 -->
-<?php
-session_start();
+*/
 require 'header.php';
 echo '<div class="row text-center">';
 if(isset($_SESSION['rollnumber']))
@@ -45,7 +47,7 @@ if(isset($_POST['go']))
  		//$marks_q2=20;
  		//$marks_endsem=40;
 		//echo '<tr><td style="text-align: center;">',$markstables[0],'</td><td  style="text-align: center;">',$markstables[1]," Hours",'</td><td style="text-align: center;">',$test_id_list['date'].'</td><td style="text-align: center;">'.$test_id_list['max_marks']."</td></tr>";
-		echo '<div class="row"><div class="span6 offset5>"<div class="table-responsive"><table class="table"><thead><tr><th>Exam</th><th>Marks</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Marks</td></tr></thead>';	 
+		echo '<div class="row" align="center"><div class="span5 offset4"><div class="table-responsive"><table class="table"><thead><tr><th>Exam</th><th>Marks</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Marks</td></tr></thead>';	 
 		echo '<tr><td><b>Q1</b></td><td>',$marks_q1[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_q1[0],'</td>';
 		echo '<tr><td><b> Q2</b></td><td>',$marks_q2[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_q2[0],'</td>';
 		echo '<tr><td> <b>Endsem</b></td><td>',$marks_endsem[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_endsem[0],'</td>';
@@ -77,6 +79,6 @@ else
 	}
 
  echo '</div></div>';
-echo '<div class="row">';
+//echo '<div class="row">';
 include("footer.php");
 ?>

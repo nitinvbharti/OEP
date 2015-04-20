@@ -1,5 +1,14 @@
 <?php
 session_start();
+/*
+<!--
+*************************************************
+
+Student is redirected to this page to give exam. Code related to conducting exam is present. 
+
+*************************************************
+-->
+*/
 if($_SESSION['tab']!=5)
 {
  
