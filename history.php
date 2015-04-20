@@ -1,3 +1,11 @@
+<!--
+*************************************************
+
+It contains conde related to showing the list of exams set by a particular faculty in tabular form.
+
+*************************************************
+-->
+
 <?php
 session_start();
 require 'header.php';

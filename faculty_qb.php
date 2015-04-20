@@ -1,3 +1,10 @@
+<!--
+*************************************************
+
+Faculty is reirected to this page to set question paper.
+
+*************************************************
+-->
 <?php
 session_start();
 

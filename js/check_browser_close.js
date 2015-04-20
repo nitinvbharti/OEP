@@ -34,8 +34,6 @@ function wireUpEvents() {
          ajaxDisplay.innerHTML = ajaxRequest.responseText;
       }
    }
-
-
          ajaxRequest.open("GET", "ajax.php", true);
          ajaxRequest.send(null); 
 */

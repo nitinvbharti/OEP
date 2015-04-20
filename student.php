@@ -1,3 +1,12 @@
+<!--
+*************************************************
+
+This page contains code related to validation of student branch, course opted, eligibility for test 
+and redirect students to respective exam based on the choice.
+
+*************************************************
+-->
+
 <?php
 session_start();
 require 'header.php';
@@ -25,9 +34,6 @@ if(isset($_SESSION['rollnumber']))
 		$ccount=$ccount+1;
 		}
 */
-
-
-
 if(isset($_POST['go']))
 {
 $_SESSION['course']=strtoupper($_POST['course']);
@@ -49,8 +55,8 @@ $_SESSION['course']=strtoupper($_POST['course']);
 		
 	//	$i=$i+1;
 	//}		
-			$t=time();
-			$dt=Date('Y-m-d',$t);
+	$t=time();
+	$dt=Date('Y-m-d',$t);
 	$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];
 	//echo $presentyr;
 	$presentm=$dt[5].$dt[6];
@@ -61,17 +67,12 @@ $_SESSION['course']=strtoupper($_POST['course']);
 		$csem='julynov';
 
 	$enroll_table=$csem.'_'.$presentyr.'_'.$cyr.'_'.$branch;
-	//echo $enroll_table;
-
+	
  	if(isset($_SESSION['course']))
 	{	
 	$nm=explode('_', $cur_table_name);
-	//var_dump($nm);
 	$roll=mysql_fetch_array(mysql_query("SELECT rollnumber from $enroll_table where course_id='$_SESSION[course]'"));
-	//var_dump($roll);
-	//echo $roll[rollnumber];
 	$roll_list=explode(',', $roll[rollnumber]);
-	//var_dump($roll_list);
 	$i=0;
 	while($roll_list[$i])
 		$i++;

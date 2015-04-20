@@ -1,0 +1,22 @@
+********************************************************************************************
+*Project Title: Online Examination Portal
+*Developer:  Shubham
+*			Nitin
+*			Kapil
+*			Kishore
+*			Balasubramanyam
+*
+*
+*Main directory contains files whose names are self-explanatory.
+
+Folders in main directory are:
+		*CSS----------------- contains CSS files related to  styling of the page.
+		*images-------------- contains required images.
+		*includes------------ contains files related to the functions and connection.
+		*js------------------ contains javascript files.
+		*public-------------- contains files for classifying public and authenication level.
+
+Description about what file does is given on the top of the respective file.
+
+
+*********************************************************************************************

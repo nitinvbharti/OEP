@@ -1,3 +1,13 @@
+<!--
+*************************************************
+
+It is the header file of the entire project.Also  Shows navigation links to other pages based on the user.
+
+*************************************************
+-->
+
+
+
 <?php
 include("connect.php");
 require("includes/functions.php");
@@ -113,12 +123,15 @@ session_start();
                     <li><a href="feedback.php">Submit Feedback</a></li>
                   </ul>
                 </li>
+
 				<?php
 			}
 			else if($_SESSION['rollnumber'])
 			 {
 			  ?>
                <li class="<?php if($_SESSION['tab']=="1") echo "active"; ?>" ><a href="about.php" >About OEP</a></li>
+               <li class="<?php if($_SESSION['tab']=="1") echo "active"; ?>" ><a href="markshistory.php" >Marks History</a></li>
+              
 			  <?php
 			 }
 				?>

@@ -1,3 +1,11 @@
+<!--
+********************************************
+
+It contains all thee related functions required for the project.
+
+********************************************
+-->
+
 <?php
 include("connect.php");
 

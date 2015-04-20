@@ -1,4 +1,4 @@
-
+<!--It is footer for all the pages-->
 
 </div><!--to close container -->
 <div id="push"></div>
