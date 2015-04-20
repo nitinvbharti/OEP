@@ -1,3 +1,8 @@
+<?php
+include("connect.php");
+require("includes/functions.php");
+session_start();
+/*
 <!--
 *************************************************
 
@@ -5,13 +10,9 @@ It is the header file of the entire project.Also  Shows navigation links to othe
 
 *************************************************
 -->
+*/
 
 
-
-<?php
-include("connect.php");
-require("includes/functions.php");
-session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en" >

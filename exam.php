@@ -94,7 +94,7 @@ else
 	    $_SESSION['cqno']=1;
 	    $_SESSION['qlist']=$q_array;
 	 //   $_SESSION['cqn']=$_SESSION["q1"];
-	    $anstablename='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'];
+	    $anstablename='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'].'_'.$_SESSION['year'];
 	 
 	   $anstablename=strtolower($anstablename);
 	     //var_dump($anstablename);

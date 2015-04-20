@@ -845,7 +845,7 @@ if(!isset($_SESSION[totalsec]))
 function verifyip()
 {	
 
-$location = 'index.php'; // where to send bad people
+$location = 'index.php'; 
 $range_low = ip2long("172.16.0.0");
 $range_high = ip2long("192.100.100.200");
 
