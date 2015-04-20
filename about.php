@@ -1,4 +1,5 @@
 <?php
+session_start();
 /*
 <!--
 *************************************************
@@ -9,10 +10,6 @@ About the developers
 *************************************************
 -->
 */
-
-
-
-  session_start();
   //echo '<title>About - IIITD&M Management Portal</title>';
   require("header.php");
   ?>

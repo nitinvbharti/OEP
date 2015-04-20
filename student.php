@@ -188,7 +188,7 @@ else
 	{
 
 		echo '</br>';
-		//echo '<span class="lead" >No Exam has been set for your Branch</span>';
+		echo '<span class="lead" >Hello there, What you want to do?</span>';
 	}
 
  echo '</div>';
