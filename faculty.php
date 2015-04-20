@@ -1,3 +1,10 @@
+<!--
+*************************************************
+
+Homepage for faculty. Includes links for setting test paper, updating evaluating etc.
+
+*************************************************
+-->
 <?php
 session_start();
 

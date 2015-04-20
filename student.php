@@ -1,3 +1,12 @@
+<!--
+*************************************************
+
+This page contains code related to validation of student branch, course opted, eligibility for test 
+and redirect students to respective exam based on the choice.
+
+*************************************************
+-->
+
 <?php
 session_start();
 require 'header.php';

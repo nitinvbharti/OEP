@@ -1,3 +1,13 @@
+<!--
+*************************************************
+
+It is the header file of the entire project.Also  Shows navigation links to other pages based on the user.
+
+*************************************************
+-->
+
+
+
 <?php
 include("connect.php");
 require("includes/functions.php");

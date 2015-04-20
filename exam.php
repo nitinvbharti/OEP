@@ -1,3 +1,11 @@
+<!--
+*************************************************
+
+Student is redirected to this page to give exam. Code related to conducting exam is present. 
+
+*************************************************
+-->
+
 <?php
 session_start();
 require 'header.php';
