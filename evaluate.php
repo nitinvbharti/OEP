@@ -19,20 +19,29 @@ if(isset($_SESSION['course']))
     {
        if(isset($_POST['1']))
 	   {
-		 $check=mysql_num_rows(mysql_query("select exam_activation from test where course_id='$_SESSION[course]' and examtype='1' "));
+		 $check=mysql_fetch_array(mysql_query("select * from test where course_id='$_SESSION[course]' and examtype='1'  "));
 
      if($_SESSION['course'])
      {
-          if($check==0)
+
+          if($check['exam_activation']==0)
           {
           	echo 'No finished exams to evaluate';
           }
           else
           {
+            if($check['semester']==1)
+            {
+              $sem="julynov";
+            }
+            else
+            {
+              $sem="janmay";
+            }
+            // echo "here".$sem;
             $c1=$_SESSION['course']."_"."q1";
-            $c2=$_SESSION['course']."_"."q1"."_julynov_2015";
+            $c2=$_SESSION['course']."_"."q1"."_".$sem."_2015";
             $c3="ans"."_".$_SESSION['course']."_"."q1";
-
 
           	 $i=0;
             // $cols=mysql_num_rows(mysql_query("select answer from com302_q1,com302_q1_julynov_2015 where que_no=question_no "));
@@ -40,12 +49,12 @@ if(isset($_SESSION['course']))
             $cols=mysql_num_rows(mysql_query("select answer from $c1,$c2 where que_no=question_no "));
 
           	//$ans=mysql_query("select answer from com302_q1,com302_q1_julynov_2015 where que_no=question_no ");
-                        $ans=mysql_query("select answer from $c1,$c2 where que_no=question_no ");
-
+                        $ans=mysql_query("select answer from $c1,$c2 where que_no=question_no order by $c1.que_no");
+                        // echo "select answer from $c1,$c2 where que_no=question_no order by que_no";
             while($verify=mysql_fetch_array($ans))
             {
             $store[$i]=$verify['answer'];
-            //echo $store[$i];
+            echo $store[$i]."</br>";
             $i++;
             }
             $j=0;
@@ -63,12 +72,12 @@ if(isset($_SESSION['course']))
             $rollno=mysql_query("select * from $c3");
             while($check=mysql_fetch_array($rollno))
             {
-             
+
               $roll=$check[0];
-          
             $k=1;
             while($k!=$cols+1)
             {
+              echo $check[$k].$store[$k-1]."</br>";
               if($check[$k]==$store[$k-1])
               {
                 $check[$cols+1]+=$final[$k-1];
@@ -78,9 +87,11 @@ if(isset($_SESSION['course']))
                $check[$cols+1]+=$neg[$k-1]; 
               }
               $k++;
+              echo $check[$cols+1];
             }
             $l=$check[$cols+1];
-             //echo $l;
+             echo $l;
+            mysql_query("alter table $c3 add marks int(2) null ");
               mysql_query("update $c3 set marks={$l} where rollnumber='{$roll}'");
             
             
@@ -394,7 +405,7 @@ if(isset($_POST['5']))
 }
 
 
-
+}
 
 
   

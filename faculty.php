@@ -1,20 +1,31 @@
 <?php
 session_start();
 
-$_SESSION['tab']=0;
+if(!isset($_SESSION['tab']))
+	$_SESSION['tab']=0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 if($_SESSION['tab']!=1)
 {
- 
- $_SESSION['tab']=1;
- unset($_SESSION['ques_bank_id']);
-unset($_SESSION['selected_exam']);
- //echo '<meta http-equiv="refresh" content="0;faculty.php" >';
+	$_SESSION['tab']=1;
+	unset($_SESSION['ques_bank_id']);
+	unset($_SESSION['selected_exam']);
+	//echo '<meta http-equiv="refresh" content="0;faculty.php" >';
 }
-
+else
+{
+	$_SESSION['check']=1;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////
 require("header.php");
+
+if(!isset($_SESSION['course']) and $_SESSION['check'])
+{
+	unset($_SESSION['check']);
+    echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Course not set ..!!! Select course from the dropdown menu below.</div>';
+	  // unset($_SESSION['check']);
+}
+
 ///\\\\\\\\\\\\\\\\\\\\\\checking credentials\\\\\\\\\\\\\\\\\\\\
 if(isset($_SESSION['faculty_id']))
 {

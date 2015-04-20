@@ -95,10 +95,10 @@ else
 	    {
 	    	mysql_query("create table $anstablename(rollnumber char(9) not null,primary key(rollnumber))");
 	    }
-	    // $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
-	    // $ans_col_num=mysql_fetch_array(mysql_query($select));
-	    // echo $ans_col_num[0];
-   	    // if($qcount!=($ans_col_num[0]-1))
+	     $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
+	     $ans_col_num=mysql_fetch_array(mysql_query($select));
+	     echo $ans_col_num[0];
+   	     //if($qcount!=($ans_col_num[0]-1))
    	    // {
    	    	 $i=1;
    	    	while($i<=$qcount){
@@ -116,20 +116,15 @@ else
 
 	}
 	// echo "here".$_GET['qn'];
-	if(isset($_POST['jump_q']))
+	$ct=1;
+	while($ct<=$_SESSION['qcount'])
 	{
-		// echo "here";
-		$ct=1;
-		while($ct<=$_SESSION['qcount'])
+		if(isset($_POST['jump_q'.$ct]))
 		{
-			$qnom='qn'.$ct;
-			echo $_POST[$qnom];
-			if(isset($_POST['qn'.$ct])){
-			$_SESSION['cqno']=$_POST['qn'.$ct];
-			unset($_POST['qn'.$ct]);	
-			}
-			$ct++;	
+		   // echo "here".$ct;	
+			$_SESSION['cqno']=$ct;
 		}
+		$ct++;
 	}
 //var_dump($_SESSION['qlist']);
 if(	isset($_SESSION['qcount'])	)
@@ -295,7 +290,7 @@ if(	isset($_SESSION['qcount'])	)
 	    echo '<tr>';
 	   $qid=$_SESSION["q".$i];
 	   $qno="Q".$i;
-	   echo '<td class="qn" ><input name="qn'.$i.'" value="'.$i.'" type="hidden" /><button type="submit" name="jump_q" class="btn btn-primary btn-large ';
+	   echo '<td class="qn" ><button type="submit" name="jump_q'.$i.'" class="btn btn-primary btn-large ';
 	   $ans=mysql_fetch_array(mysql_query("select $qno from $exam_detail where  rollnumber='$_SESSION[rollnumber]' "));
 	   if($ans["$qno"])
 	    echo ' btn-success';
@@ -306,8 +301,7 @@ if(	isset($_SESSION['qcount'])	)
 	    echo '</tr>';
 	  }
 	 echo '</table>'; 
-	  echo '</form>';
-	
+	 echo '</form>';
 	 /////////////////////             ///////////////////////
 	 echo '</div>';
 include("footer.php");

@@ -156,7 +156,7 @@ else
    $select = mysql_query("select examtype, date from test where course_id='$_SESSION[course]' order by date");
    while($test=mysql_fetch_array($select))
      {
-      if(validateDate2($test['date']))
+      if(validateDate($test['date']))
       {
 	     echo '<option value="'.$_SESSION['course'].'_'.$test['examtype'].'_'.$test['date'].'" >';
        if($test['examtype']==1)
