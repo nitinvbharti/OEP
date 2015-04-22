@@ -33,7 +33,7 @@ if($_POST['logout'])
        setcookie("faculty_id","",time()-3600*4*365*10);
 	  }
 	setcookie("name","",time()-3600*4*365*10);
-    echo '<script>window.location="index.php";</script>';
+    echo '<script>window.location="index.php";</script>';   //////Reddirect the use to homepage
 
   }
 /////////////////////////////when logout is clicked///////////////////////////////////////////////////
@@ -45,12 +45,20 @@ if(isset($_POST['login']))
   $select=mysql_query("select name from students where rollnumber='$_POST[username]' and password = '$_POST[password]' ");
   if(mysql_num_rows($select))
    {
+
+
+    $_SESSION['ip']=$_SERVER['REMOTE_ADDR'];
+    $ip=$_SESSION['ip'];
+    /*
+    $Allowed=verifyip($ip)
+    Call this funtion to verify ip in a given range
+    By default it is not activated.
+    */
     $Allowed=1;
     //var_dump(expression)
     if($Allowed=='1')
     {
-      $_SESSION['ip']=$_SERVER['REMOTE_ADDR'];
-      $ip=$_SESSION['ip'];
+      
     $student=mysql_fetch_array($select);
 	  $_SESSION['rollnumber']=strtoupper($_POST['username']);
 	  $_SESSION['name']=$student['name'];

@@ -57,7 +57,7 @@ else
  {	
  $ExamTableName=$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'];
  $_SESSION['ExamTableName']=$ExamTableName;
-   //	echo $ExamTableName;
+   	echo $ExamTableName;
  if(isset($_POST['go']) || isset($_SESSION['course']))
   {
 	  echo '<br /><div class="row-fluid" >';
@@ -94,7 +94,7 @@ else
 	    $_SESSION['cqno']=1;
 	    $_SESSION['qlist']=$q_array;
 	 //   $_SESSION['cqn']=$_SESSION["q1"];
-	    $anstablename='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'].'_'.$_SESSION['year'];
+	    $anstablename='ans'.'_'.$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'];
 	 
 	   $anstablename=strtolower($anstablename);
 	     //var_dump($anstablename);
@@ -107,10 +107,9 @@ else
 	     $select="SELECT count(*) FROM information_schema.columns WHERE table_name='$anstablename'";
 	     $ans_col_num=mysql_fetch_array(mysql_query($select));
 	     echo $ans_col_num[0];
-   	     //if($qcount!=($ans_col_num[0]-1))
-   	    // {
    	    	 $i=1;
-   	    	while($i<=$qcount){
+   	    	while($i<=$qcount)
+   	    	{
    	    	if($i==1)
    	    		$colname_prev="rollnumber";
    	    	else
@@ -121,7 +120,9 @@ else
    	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
    	   		$i=$i+1;
    	   		}
-   	    
+   	   		$colname_prev='Q'.($i-1);
+   	   		$colname="marks";
+   	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
 
 	}
 	// echo "here".$_GET['qn'];
@@ -290,7 +291,7 @@ if(	isset($_SESSION['qcount'])	)
 	 echo '<h3 style="margin-top:-5px;" align=center >Question List</h3>';
 	 echo '<form action="exam.php" method="post">';
 	 echo '<table align=center >';
-	 $exam_detail="ans_".$_SESSION['course']."_".$_SESSION['examtype'];
+	 $exam_detail="ans_".$_SESSION['course']."_".$_SESSION['examtype'].'_'.$_SESSION['sem'];
 	 // echo $exam_detail.$exam; -->correct
 	 //$qbank=30
 	 for($i=1;$i<=$_SESSION['qcount'];$i++)

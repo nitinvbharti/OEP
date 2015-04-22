@@ -1,13 +1,11 @@
 <?php
 session_start();
 /*
-<!--
 *************************************************
 
 This page contains code related to student's marks and evaluation.
 
 *************************************************
--->
 */
 require 'header.php';
 echo '<div class="row text-center">';
@@ -15,7 +13,7 @@ if(isset($_SESSION['rollnumber']))
 {
  	
 	$rollnumber=$_SESSION['rollnumber'];
- 	$branch=$rollnumber[0].$rollnumber[1].$rollnumber[2];
+ 	$branch=$rollnumber[0].$rollnumber[1].$rollnumber[2];	///Construct Branch name from given Rollnumber & find year
  	$yr='20'.$rollnumber[3].$rollnumber[4];
  	if($yr<=2013)
  		$cyr='2009';
@@ -23,16 +21,32 @@ if(isset($_SESSION['rollnumber']))
  		$cyr='2014';
  	$cur_table_name='curriculum'.'_'.$cyr.'_'.$branch;
 
+
+
+
+
 if(isset($_POST['go']))
 	{
 
-		//echo "Shubam";
-		$_SESSION['course']=strtolower($_POST['course']);
-		$markstables[0]='ans'.'_'.$_SESSION['course'].'_'.'q1';
-		$markstables[1]='ans'.'_'.$_SESSION['course'].'_'.'q2';
-		$markstables[2]='ans'.'_'.$_SESSION['course'].'_'.'endsem';
-		$markstables[3]='ans'.'_'.$_SESSION['course'].'_'.'makeup';
-		$markstables[4]='ans'.'_'.$_SESSION['course'].'_'.'supplementary';
+	$_SESSION['course']=strtolower($_POST['course']);
+
+	$exam="SELECT semester from test where course_id='$_SESSION[course]'";
+	$test=mysql_fetch_array(mysql_query($exam));
+ 	$t=time();										///Use current time to find if its Odd Sem or even Sem.
+	$dt=Date('Y-m-d',$t);
+	$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];
+	if($test['semester']=='1')
+			$_SESSION['sem']='julynov'.'_'.$presentyr;
+	else
+			$_SESSION['sem']='janmay'.'_'.$presentyr;
+
+
+		////////////COncstruct the name of answer table of the User.
+		$markstables[0]='ans'.'_'.$_SESSION['course'].'_'.'q1'.'_'.$_SESSION['sem'];
+		$markstables[1]='ans'.'_'.$_SESSION['course'].'_'.'q2'.'_'.$_SESSION['sem'];
+		$markstables[2]='ans'.'_'.$_SESSION['course'].'_'.'endsem'.'_'.$_SESSION['sem'];
+		$markstables[3]='ans'.'_'.$_SESSION['course'].'_'.'makeup'.'_'.$_SESSION['sem'];
+		$markstables[4]='ans'.'_'.$_SESSION['course'].'_'.'supplementary'.'_'.$_SESSION['sem'];
 		//var_dump($markstables);
 		//echo $_SESSION[rollnumber];
 		$max_q1=mysql_fetch_array(mysql_query("SELECT max_marks from test where course_id='$_SESSION[course]' AND examtype='1'"));
@@ -42,22 +56,17 @@ if(isset($_POST['go']))
 		$marks_q1=mysql_fetch_array(mysql_query("SELECT marks from $markstables[0] where rollnumber='$_SESSION[rollnumber]'"));
 		$marks_q2=mysql_fetch_array(mysql_query("SELECT marks from $markstables[1] where rollnumber='$_SESSION[rollnumber]'"));
 		$marks_endsem=mysql_fetch_array(mysql_query("SELECT marks from $markstables[2] where rollnumber='$_SESSION[rollnumber]'"));
- 		//var_dump($marks_q1);
- 		//$marks_q1=10;
- 		//$marks_q2=20;
- 		//$marks_endsem=40;
-		//echo '<tr><td style="text-align: center;">',$markstables[0],'</td><td  style="text-align: center;">',$markstables[1]," Hours",'</td><td style="text-align: center;">',$test_id_list['date'].'</td><td style="text-align: center;">'.$test_id_list['max_marks']."</td></tr>";
-		echo '<div class="row" align="center"><div class="span5 offset4"><div class="table-responsive"><table class="table"><thead><tr><th>Exam</th><th>Marks</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Marks</td></tr></thead>';	 
+ 		echo '<div class="table-responsive"><table table-hover table-striped table-bordered" style="width:80%;" align="center"><thead><tr><th>Exam</th><th>Marks</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Marks</td></tr></thead>';	 
 		echo '<tr><td><b>Q1</b></td><td>',$marks_q1[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_q1[0],'</td>';
 		echo '<tr><td><b> Q2</b></td><td>',$marks_q2[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_q2[0],'</td>';
 		echo '<tr><td> <b>Endsem</b></td><td>',$marks_endsem[0],'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$max_endsem[0],'</td>';
-		echo '</table></div></div>';
+		echo '</table>';
 	}
 
 
 if(!isset($_SESSION['course']))
 {
-
+///////////////Provides option to student to select course for viewing result./////////////
 $select=mysql_query("SELECT course_no from $cur_table_name");
  echo '<form action="markshistory.php" method="post" ><select name="course">';
  while($row=mysql_fetch_array($select))

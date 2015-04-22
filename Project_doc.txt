@@ -1,6 +1,6 @@
 ********************************************************************************************
 *Project Title: Online Examination Portal
-*Developer:  Shubham
+*Developer: Shubham
 *			Nitin
 *			Kapil
 *			Kishore

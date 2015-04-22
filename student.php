@@ -31,22 +31,8 @@ if(isset($_POST['go']))
 $_SESSION['course']=strtoupper($_POST['course']);
 	$i=0;
 	$j=0;
-	//$active_xams=array();
-//	while($i<5)
-//	{
-		$exam=mysql_query("SELECT examtype,semester from test where course_id='$_SESSION[course]' and exam_activation='1'");
-		//echo $isactive[0];
-		//if($isactive[0]=='1')
-	//	{
-		//	$exam="SELECT examtype,semester from test where course_id='$_SESSION[course]'";
-			$test=mysql_fetch_array($exam);
-			
-		//	var_dump($test);
-		//	break;
-		//}
-		
-	//	$i=$i+1;
-	//}		
+
+	$exam=mysql_query("SELECT examtype,semester from test where course_id='$_SESSION[course]' and exam_activation='1'");			$test=mysql_fetch_array($exam);	
 	$t=time();
 	$dt=Date('Y-m-d',$t);
 	$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];
@@ -58,7 +44,7 @@ $_SESSION['course']=strtoupper($_POST['course']);
 	else
 		$csem='julynov';
 
-	$enroll_table=$csem.'_'.$presentyr.'_'.$cyr.'_'.$branch;
+	$enroll_table='enrollment'.'_'.$csem.'_'.$presentyr.'_'.$cyr.'_'.$branch;
 	
  	if(isset($_SESSION['course']))
 	{	
@@ -85,9 +71,6 @@ $_SESSION['course']=strtoupper($_POST['course']);
 			$exam="SELECT examtype,semester from test where course_id='$_SESSION[course]'";
 			$test=mysql_fetch_array(mysql_query($exam));
 		
- 	//$_SESSION['examtype']=$test[0];
-   // var_dump($test);
-	//echo $_SESSION['examtype'];
  if(isset($test))
 	{
 		if($test[0]=='1')
@@ -108,10 +91,15 @@ $_SESSION['course']=strtoupper($_POST['course']);
 			$_SESSION['examtype']='supplementary';
 		
 		}
+		$t=time();
+		$dt=Date('Y-m-d',$t);
+		$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];
+
 		if($test['semester']=='1')
-			$_SESSION['sem']='julynov_2015';
+			$_SESSION['sem']='julynov'.'_'.$presentyr;
 		else
-			$_SESSION['sem']='janmay_2015';
+			$_SESSION['sem']='janmay'.'_'.$presentyr;
+		//echo $_SESSION[sem];
 
 		$chk=mysql_fetch_array(mysql_query("select * from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
 		if($chk==NULL)
@@ -120,11 +108,12 @@ $_SESSION['course']=strtoupper($_POST['course']);
 				var_dump($stu_add);
 			}
 	}
-
+}
+}
 
 $examstatus=$_SESSION['examtype'].'_'.'taken';
 $val=mysql_fetch_array(mysql_query("select $examstatus from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
-//var_dump($val);
+
 
 if($val[$examstatus]==='0')
 	{
@@ -136,16 +125,14 @@ if($val[$examstatus]==='0')
 		 	}
 elseif ($val[$examstatus]=='1')
 	{
-
 		$_SESSION['examstatus']='1';
 	echo '<span class="lead" >You have already taken '.$_SESSION[course].' test</span>';
+	echo '</div>';
 	}
 else
-	{if ($val[$examstatus]!=NULL) 
+	{
+		if ($val[$examstatus]!=NULL) 
 		{
-		//$_SESSION['prev_duration']=$val[$examstatus];
-		//echo $_SESSION[prev_duration];
-		//var_dump($_SESSION['prev_duration']);
 		echo '<div class="row">';
 		 echo '<div class="span3 offset5"><br/><button class="btn btn-primary btn-large btn-block" type="submit" name="resumetest" onclick="window.location.href=\'exam.php\'"><i class="icon-white icon-flag" ></i>Resume Test</button></span></div>';
 		 echo '</div>';
@@ -156,39 +143,32 @@ else
 			echo '<span class="lead" >NO exam has been set for '.$_SESSION[course].' Course. Consult the related faculty.</span>';
 		}
 	}
-}
+ if($examstatus==NULL)
+ 		echo '<span class="lead" >You are on wrong page. Please log out</span>';
 }
 
-}
+
+
 
 if(!isset($_SESSION['course']))
 {
 $select=mysql_query("SELECT course_no from $cur_table_name");
  echo '<form action="student.php" method="post" ><select name="course">';
- while($row=mysql_fetch_array($select))
-  {
-    echo '<option value='.$row['course_no'].'>'.$row['course_no'].'</option> ';
-  }
- echo '</select>';
-
-
- echo '<br /><br /><button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Select Course</button>';
- echo '</form>';
+		 while($row=mysql_fetch_array($select))
+		  {
+		    echo '<option value='.$row['course_no'].'>'.$row['course_no'].'</option> ';
+		  }
+			 echo '</select>';
+	 		echo '<br /><br /><button type="submit" value="go" name="go" class="btn btn-info btn-large" ><i class="icon-ok icon-white" ></i> Select Course</button>';
+	 		echo '</form>';
 }
-
-// if($test[0]==NULL)
- ///	{
- 	//	echo '<span class="lead" >No Exam has been set for your Branch</span>';
- 	//}
-	//echo '<script>window.location="exam.php";</script>';
-			//var_dump($_SESSION['examtype']);
-
+	
 	}
 else
 	{
 
 		echo '</br>';
-		echo '<span class="lead" >Hello there, What you want to do?</span>';
+		echo '<span class="lead" >Hello there, What you want to do?</br> logout</span>';
 	}
 
  echo '</div>';

@@ -1,13 +1,8 @@
 <?php
 session_start();
-if($_SESSION['tab']!=8)
-{
-	$_SESSION['tab']=8;
-}
-
 require("header.php");
 
-if(!isset($_SESSION['faculty_id']))
+if(!isset($_SESSION['rollnumber']))
 {
 	echo '<script>window.location="index.php";</script>';
 }
@@ -18,23 +13,35 @@ else if(!isset($_POST['change_pass']) && !isset($_POST['btn_set']))
 		echo '<div class="alert fade in alert-success" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Password successfully changed ..!!!</div>';
 		unset($_SESSION['success']);
 	}
-	$details=mysql_fetch_array(mysql_query("select * from faculty where faculty_id='$_SESSION[faculty_id]' "));
+	$details=mysql_fetch_array(mysql_query("select * from students where rollnumber='$_SESSION[rollnumber]' "));
 	$courses=mysql_query("select course_id from slot_wise_courses where faculty_id='$_SESSION[faculty_id]' ");
 ?>
 	</br></br></br>
 	<table class="table table-hover table-striped table-bordered" style="width:40%;" align="center">
 	<tr>
-		<td style="text-align: center"><strong>ID</strong></td>
-		<td style="text-align: center"><?php echo $details['faculty_id'] ?></td>
+		<td style="text-align: center"><strong>ROLLNUMBER</strong></td>
+		<td style="text-align: center"><?php echo $details['rollnumber'] ?></td>
 	</tr>
 	<tr>
 		<td style="text-align: center"><strong>NAME</strong></td>
 		<td style="text-align: center"><?php echo $details['name'] ?></td>
 	</tr>
 	<tr>
-		<td style="text-align: center"><strong>FACULTY STATUS</strong></td>
+		<td style="text-align: center"><strong>HOSTEL</strong></td>
+		<td style="text-align: center"><?php echo $details['hostel'] ?></td>
+	</tr>
+	<tr>
+		<td style="text-align: center"><strong>ROOM</strong></td>
+		<td style="text-align: center"><?php echo $details['room'] ?></td>
+	</tr>
+	<tr>
+		<td style="text-align: center"><strong>CONTACT</strong></td>
+		<td style="text-align: center"><?php echo $details['st_contact'] ?></td>
+	</tr>
+	<tr>
+		<td style="text-align: center"><strong>Registered</strong></td>
 		<td style="text-align: center"><?php
-		if($details['activate']==1)
+		if($details['registration_status']==1)
 		{
 		   echo "Active"; 
 		}
@@ -48,13 +55,9 @@ else if(!isset($_POST['change_pass']) && !isset($_POST['btn_set']))
 		<td style="text-align: center"><strong>PASSWORD</strong></td>
 		<td style="text-align: center"><?php echo $details['password']; ?></td>
 	</tr>
-	<tr>
-		<td style="text-align: center"><strong>COURSES</strong></td>
-		<td style="text-align: center"><?php while($each_course=mysql_fetch_array($courses)) echo $each_course['course_id']."</br>" ?></td>
-	</tr>
 	</table>
 	<div class="password_change" align="center">
-		<form action="profile.php" method="post">
+		<form action="profile_stu.php" method="post">
 			<button class="btn btn-primary btn-large" type="submit" name="change_pass" value="change" ><i class="icon-white icon-flag" > </i> Change Password</button>
 		</form>
 	</div>
@@ -67,7 +70,7 @@ else if(isset($_POST['change_pass']))
 	<?php
 	if(isset($_POST['old_pass']))
 	{
-		$get_pass=mysql_fetch_array(mysql_query("select password from faculty where faculty_id='$_SESSION[faculty_id]' "));	
+		$get_pass=mysql_fetch_array(mysql_query("select password from students where rollnumber='$_SESSION[rollnumber]' "));	
 		if($get_pass['password']!=$_POST['old_pass'])
 		{
 			echo '<div class="alert fade in alert-failed" ><button type="button" class="close" data-dismiss="alert" >&times;</button>Old Password Not same ..!!!</div>';
@@ -84,16 +87,16 @@ else if(isset($_POST['change_pass']))
 		}
 		else
 		{
-			mysql_query("update faculty set password='$_POST[new_pass]' where faculty_id='$_SESSION[faculty_id]' ");
+			mysql_query("update students set password='$_POST[new_pass]' where rollnumber='$_SESSION[rollnumber]' ");
 			$_SESSION['success']=1;
-			echo '<script>window.location="profile.php";</script>';
+			echo '<script>window.location="profile_stu.php";</script>';
 		}
 	}
 	if(!isset($_POST['old_pass']))
 	{
 	?>
 	<div class="controls password_handle">
-	<form action="profile.php" method="post">
+	<form action="profile_stu.php" method="post">
 	<table class="table table-hover table-striped table-bordered" style="width:40%;" align="center">
 		<tr>
 			<td style="text-align: center; padding-top: 15px;"><strong>CURRENT PASSWORD</strong></td>

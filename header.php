@@ -102,7 +102,7 @@ It is the header file of the entire project.Also  Shows navigation links to othe
               <span class="icon-bar"></span>
             </button>
             <!--sfetch the current user name from database-->
-            <a class="brand" href= "<?php if($_SESSION['faculty_id']){ echo "faculty.php"; } else if($_SESSION['rollnumber']) echo 'student.php'; else {echo "index.php";} ?>" >OEP</a>
+            <a class="brand" href= "<?php if($_SESSION['faculty_id']){ echo "faculty.php"; } else if($_SESSION['rollnumber']) echo 'profile_stu.php'; else {echo "index.php";} ?>" >OEP</a>
             <div class="nav-collapse collapse">
 			<ul class="nav">
 			 <?php

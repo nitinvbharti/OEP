@@ -842,6 +842,7 @@ if(!isset($_SESSION[totalsec]))
 			}	
 		}	
 }
+//function limits the access of portal for a particular range of ip address.
 function verifyip()
 {	
 
@@ -850,13 +851,14 @@ $range_low = ip2long("172.16.0.0");
 $range_high = ip2long("192.100.100.200");
 
 $ip = ip2long($_SERVER['REMOTE_ADDR']);
-if ($ip >= $range_low && $ip <= $range_high) {
+if ($ip >= $range_low && $ip <= $range_high) 
+	{
 	return '0';
 	}
 else {
 	return '1';
 // do something else or nothing at all
-//echo '<script>window.location="google.com";</script>';
+//echo '<script>window.location="index.com";</script>';
 }
 }
 
