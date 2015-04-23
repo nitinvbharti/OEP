@@ -57,7 +57,7 @@ else
  {	
  $ExamTableName=$_SESSION['course'].'_'.$_SESSION['examtype'].'_'.$_SESSION['sem'];
  $_SESSION['ExamTableName']=$ExamTableName;
-   	echo $ExamTableName;
+   	//echo $ExamTableName;
  if(isset($_POST['go']) || isset($_SESSION['course']))
   {
 	  echo '<br /><div class="row-fluid" >';
@@ -120,9 +120,7 @@ else
    	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
    	   		$i=$i+1;
    	   		}
-   	   		$colname_prev='Q'.($i-1);
-   	   		$colname="marks";
-   	    	mysql_query("ALTER TABLE $anstablename ADD $colname VARCHAR(7) after $colname_prev");
+
 
 	}
 	// echo "here".$_GET['qn'];
