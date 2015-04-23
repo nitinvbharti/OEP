@@ -15,16 +15,14 @@ require 'header.php';
 if(isset($_SESSION['rollnumber']))
 {
  	echo '<div class="row-fluid text-center">';
-// 	$course_count="select count(course_id) from $branch_enroll_table"
- //	$branch_enroll_table=
- 	$rollnumber=$_SESSION['rollnumber'];
+ 	$rollnumber=$_SESSION['rollnumber'];										//Rollnumber of the student
  	$branch=$rollnumber[0].$rollnumber[1].$rollnumber[2];
  	$yr='20'.$rollnumber[3].$rollnumber[4];
  	if($yr<=2013)
  		$cyr='2009';
  	else
  		$cyr='2014';
- 	$cur_table_name='curriculum'.'_'.$cyr.'_'.$branch;
+ 	$cur_table_name='curriculum'.'_'.$cyr.'_'.$branch;							//Category of student based on curriculum versions for a branch
 
 if(isset($_POST['go']))
 {
@@ -35,7 +33,7 @@ $_SESSION['course']=strtoupper($_POST['course']);
 	$exam=mysql_query("SELECT examtype,semester from test where course_id='$_SESSION[course]' and exam_activation='1'");			$test=mysql_fetch_array($exam);	
 	$t=time();
 	$dt=Date('Y-m-d',$t);
-	$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];
+	$presentyr=$dt[0].$dt[1].$dt[2].$dt[3];										//Current year to create tables accrdingly
 	//echo $presentyr;
 	$presentm=$dt[5].$dt[6];
 	//echo $presentm;
@@ -50,7 +48,7 @@ $_SESSION['course']=strtoupper($_POST['course']);
 	{	
 	$nm=explode('_', $cur_table_name);
 	$roll=mysql_fetch_array(mysql_query("SELECT rollnumber from $enroll_table where course_id='$_SESSION[course]'"));
-	$roll_list=explode(',', $roll[rollnumber]);
+	$roll_list=explode(',', $roll[rollnumber]);									//List of students enrolled in a course separted by comma
 	$i=0;
 	while($roll_list[$i])
 		$i++;
@@ -60,7 +58,7 @@ $_SESSION['course']=strtoupper($_POST['course']);
 	while($j<=$i)
 		{
 			if($roll_list[$j]==strtoupper($_SESSION['rollnumber']))
-				$enrolled=1;
+				$enrolled=1;													//Given student is found in the selected course
 		$j=$j+1;
 		}
 	
@@ -69,7 +67,7 @@ $_SESSION['course']=strtoupper($_POST['course']);
 	else		
 		{
 			$exam="SELECT examtype,semester from test where course_id='$_SESSION[course]'";
-			$test=mysql_fetch_array(mysql_query($exam));
+			$test=mysql_fetch_array(mysql_query($exam));							//Choose type of exam
 		
  if(isset($test))
 	{
