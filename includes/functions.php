@@ -13,6 +13,8 @@ include("connect.php");
 
 error_reporting(E_ERROR | E_PARSE);
 
+
+//////////////////////////		This funtion contains code for validation of date in proper format and the time in proper values////////////////////
 function validateTime($rawtime,$seperator2=':')
 {
 	//echo $rawtime;
@@ -24,6 +26,9 @@ function validateTime($rawtime,$seperator2=':')
 	}
 	return false;
 }
+
+//////////////// 	This function contains code to check if the date is correct and greater than todays date and it is in proper format as asked 		////////////////////
+
 function validateDate($rawDate,$seperator='-')
     {
 		//echo $rawdate;
@@ -78,6 +83,8 @@ function validateDate($rawDate,$seperator='-')
         }
     }
 
+//////////////// 	This function contains code to check if the date is correct or not and it is in proper format as asked 		////////////////////
+
 function validateDate2($rawDate,$seperator='-')
     {
 		//echo $rawdate;
@@ -131,7 +138,7 @@ function validateDate2($rawDate,$seperator='-')
         }
     }
 
-	//find the relevent personal data based on id////////
+	///////		find the relevent personal data based on id 		////////
 function search_who()
 {
 	if(isset($_SESSION['rollnumber']) || isset($_SESSION['faculty_id']) )
@@ -146,6 +153,8 @@ function search_who()
 		}
 	}
 }
+
+/////////////////// 	This shows who is logged in by displaying there name /////////////////////
 
 function signin_faculty()
 {
@@ -176,6 +185,8 @@ function signin_faculty()
 	}
 }
 
+////////////////////// 		This shows the name of the student who is logged in //////////////
+
 function signin_student()
 {
 	if(isset($_POST['username']))   //checking the 'user' name which is from Sign-In.html, is it empty or have some text
@@ -203,7 +214,7 @@ function signin_student()
 	return 0;
 	}
 }
-///////////////Select the examtype according to the value////////////
+///////////////Select the examtype according to the value for creating databases as needed in short form////////////
 function find_examtype($examtype)
 {	
 	if($examtype=="1")
@@ -224,7 +235,7 @@ function find_examtype($examtype)
 	}
 	return $exmtyp;
 }
-///////////Find Exam type to display properly/////////////
+///////////////Select the examtype according to the value for displaying in list as it must be properly explained   ////////////
 function find_examtype_proper($examtype)
 {	
 	if($examtype=="1")
@@ -253,22 +264,8 @@ function list_all_courses($fac_id)
 	return $course_set;
 }
 
-function get_test_id($c,$t)
-{
-	global $con;
-	$query = mysql_query("SELECT * FROM tests WHERE course_id='$c' AND exam='$t' ") or die("Died3".mysql_error());
-	$count = mysql_num_rows($query);
-	if($count==0)
-	{
-		return -1;
-	}
-	else
-	{
-		$tt = mysql_fetch_array($query);
-		return $tt['test_id'];
-	}
-}
 /////////////////////////////////checks if a given faculty teahes a given course/////////////
+
 function if_okay_fac($c)
 {
 	//global $con;
@@ -283,7 +280,9 @@ function if_okay_fac($c)
 		return 1;
 	}
 }
-////////////////Find semester//////////////
+
+////////////////	This determines the semester, on the basis of number stored in database, which is later used in creating databases	//////////////
+
 function find_semester($d)
 {
 	if($d=="1")
@@ -296,7 +295,9 @@ function find_semester($d)
  	}
  	return $sem;
 }
-//////////////////Find sem value////////////////////
+
+////////////////	This function evaluates semester on the basis of month of the date entered. This saves the user from entering the semester  //////////////
+
 function find_sem($m)
 {
 	if($m>=1 && $m<=6)
@@ -305,7 +306,9 @@ function find_sem($m)
 		return 1;
 
 }
-/////////////////////////////////fetch questions based on test id///////////
+
+/////////////////////////////////	fetch database and questions based on date,examtype and course chosen by the user	///////////
+
 function fetch_questions($c,$d)
 {
  if($_POST['goback'])
@@ -615,6 +618,8 @@ while($ques_bank=mysql_fetch_array($select))
  }
 }
 
+/////////////////	This selects the respictive number of respective exam which is used to compare in used block 	////////////////////////////
+
 function find_number($no)
 {
 	//echo "here".$no;
@@ -627,6 +632,8 @@ function find_number($no)
 	else if($no="endsem")
 		return 4;
 }
+
+//////////////////	 This displays the information about the selected exam such as date, examtype, duration and max marks. 	///////////////
 
 function display_test_info($selected_exam)
 {
@@ -652,28 +659,10 @@ function display_test_info($selected_exam)
 	  echo '<tr><td><b>Duration: </b></td><td>'.$data['duration'].'</td></tr>';
 	  echo '<tr><td><b>Date of Exam: </b></td><td>'.$data['date'].'</td></tr>';
 	  echo '<tr><td><b>Maximum Marks: </b></td><td>'.$data['max_marks'].'</td></tr>';
-	  /*echo '<tr><td><b>Equal Weightage: </b></td><td>';
-	  if($test['equal_weight']==1)
-	   echo "Yes";
-	  else
-	   echo "No";
-	  echo '</td></tr>';
-	  echo '<tr><td><b>Maximum Questions: </b></td><td>'.$test['max_qns'].'</td></tr>';
-	  echo '<tr><td><b>Negative Marking: </b></td><td>';
-	  if($test['neg_marking']==1)
-	   echo "Yes";
-	  else
-	   echo "No";
-	  echo '</td></tr>';
-	  echo '<tr><td><b>Number of Sets: </b></td><td>'.$test['sets'].'</td></tr>';
-	  echo '<tr><td><b>Marks are displayed after the test: </b></td><td>';
-	  if($test['display']==1)
-	   echo "Yes";
-	  else
-	   echo "No";*/
 	  echo '</table>';
 }
 
+//////////////	This function stores the exam into the answer table for that question 	//////////////////
 
 function update_answers($post,$ansTable,$ansno)
  {
