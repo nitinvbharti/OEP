@@ -10,6 +10,13 @@ Student is redirected to this page to give exam. Code related to conducting exam
 */
 session_start();
 require 'header.php';
+/* ****************************************
+       Variable List
+$dtformatted-> Date formatted to Year-Month-Day-Hour-Minute-Second form for storing in database.
+$
+
+
+//****************************************/
 if(isset($_SESSION['rollnumber']))
 {
 echo '<div class="row-fluid text-center ">';

@@ -170,8 +170,5 @@ else
 	}
 
  echo '</div>';
- 	
-
-
 include("footer.php");
 ?>

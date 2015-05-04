@@ -692,7 +692,7 @@ function update_answers($post,$ansTable,$ansno)
 		}
  }
  
- 
+
 function questions_header()
  {
 	  echo '<br /><div class="row-fluid" >';
@@ -711,9 +711,7 @@ function questions_header()
 	    echo '<span class="text-success" > End sem </span>';
 
 ?> 
-<!-- <br /><a href="#myModal" role="button" data-toggle="modal">More Info</a> -->
-
-<!-- Modal -->
+<!-- Shows the menu related to updating the exam-->
 <div id="myModal" class="modal hide fade text-left" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -735,26 +733,22 @@ function questions_header()
 	  echo '</div>';
  }
  
-
-
+///****************************************************
+///Shows how much time is remaining for the User
+///*************************************************///
 function duration()
 {	$time=0;
 	  if(!isset($_SESSION['start']))
 	   {
         $st=mysql_fetch_array(mysql_query("select duration from test where course_id='$_SESSION[course]'"));
-        //var_dump($st);
         $st_conv=explode(":", $st[0]);
-       // var_dump($st_conv);
         $totalsec=$st_conv[0]*3600+$st_conv[1]*60;
-        //var_dump($totalsec);
         $_SESSION['totalsec']=$totalsec;
-        
 		 $examstatus=$_SESSION['examtype'].'_'.'taken';
       		$val=mysql_fetch_array(mysql_query("select $examstatus from student_exam_status where rollnumber='$_SESSION[rollnumber]' and course_id='$_SESSION[course]' "));
 		 if($val[0]!=0 && $val[0]!='1')
 		 {
           $_SESSION['prev_duration']=$val[0];
-		  //echo 'taken from prev duration';
 		 }	 
 
 
@@ -763,9 +757,6 @@ function duration()
 		$_SESSION['mins']=0;
 		$_SESSION['secs']=0;
        }
-       ///////////////////////
-        //var_dump($val);
-
 	  $_SESSION['duration']=time(NULL) - $_SESSION['start'] +$_SESSION['prev_duration'];
 
 	  if($_SESSION['duration'])
@@ -806,6 +797,7 @@ function duration()
 	   }
 }
 
+//Function to verify the remaining time for the User for finishing the exam.It also updates how much time is remaining. Peforms database action
 function update_duration()
 {
 	$examtype=$_SESSION['examtype'].'_'.'taken';
